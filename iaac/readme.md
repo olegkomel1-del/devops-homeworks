@@ -24,7 +24,72 @@ sudo usermod -aG docker $USER
     sudo apt install vagrant  
 
 
-    
+    Из зеркала
+Установите дистрибутив Packer для вашей платформы из зеркала:
+
+Скачайте дистрибутив Packer из зеркала и распакуйте в директорию packer:
+
+mkdir packer
+wget https://hashicorp-releases.yandexcloud.net/packer/1.11.2/packer_1.11.2_linux_amd64.zip -P ~/packer
+unzip ~/packer/packer_1.11.2_linux_amd64.zip -d ~/packer
+
+В примере указана версия 1.11.2, актуальную версию Packer см. в зеркале.
+
+Добавьте Packer в переменную PATH:
+
+Добавьте в файл .profile строку:
+
+export PATH="$PATH:/home/<имя_пользователя>/packer"
+
+Сохраните изменения.
+
+Перезапустите оболочку:
+
+exec -l $SHELL
+
+Убедитесь, что Packer установлен:
+
+packer --version
+
+Результат:
+
+Packer v1.11.2
+
+
+
+
+
+
+
+
+
+
+
+
+С сайта HashiCorp
+Скачайте и установите дистрибутив Packer по инструкции на официальном сайте.
+
+Настройте плагин Yandex Compute Builder
+Чтобы настроить плагин:
+
+Создайте файл config.pkr.hcl со следующим содержанием:
+
+packer {
+  required_plugins {
+    yandex = {
+      version = ">= 1.1.2"
+      source  = "github.com/hashicorp/yandex"
+    }
+  }
+}
+
+Установите плагин:
+
+packer init <путь_к_файлу_config.pkr.hcl>
+
+Результат:
+
+Installed plugin github.com/hashicorp/yandex v1.1.2 in ...
 
 
 <img width="453" height="70" alt="image" src="https://github.com/user-attachments/assets/b3f6578f-b2f0-413a-b914-12ee2018bda5" />  
