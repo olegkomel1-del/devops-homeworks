@@ -7,7 +7,12 @@ sudo apt-get update
 sudo apt-get install -y docker.io  
 sudo usermod -aG docker $USER  
 
-<img width="453" height="70" alt="image" src="https://github.com/user-attachments/assets/b3f6578f-b2f0-413a-b914-12ee2018bda5" />
+  <img width="478" height="32" alt="image" src="https://github.com/user-attachments/assets/09992620-082b-4a94-9bda-b902e52a9efc" />  
+  
+
+
+<img width="453" height="70" alt="image" src="https://github.com/user-attachments/assets/b3f6578f-b2f0-413a-b914-12ee2018bda5" />  
+
 
 
 
