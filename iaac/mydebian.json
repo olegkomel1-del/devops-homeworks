@@ -2,13 +2,13 @@
     "builders": [
         {
             "type": "yandex",
-            "token": "y0_AgAAAAA...это точно секретные данные!",
-            "folder_id": "b1gfu..не секретные данные",
+            "token": "y0_AgAAAAA...твой_токен",
+            "folder_id": "b1gfu...твой_id",
             "zone": "ru-central1-a",
-            "image_name": "debian-11-docker",
-            "image_description": "my custom debian with docker",
+            "image_name": "debian-11-docker-{{timestamp}}",
+            "image_description": "my custom debian with docker, htop and tmux",
             "source_image_family": "debian-11",
-            "subnet_id": "e9bhm45v9j5tna68jf9n...совсем не секретные данные",
+            "subnet_id": "e9bhm45v9j5tna68jf9n...твой_id",
             "use_ipv4_nat": true,
             "disk_type": "network-hdd",
             "ssh_username": "debian"
@@ -18,7 +18,18 @@
         {
             "type": "shell",
             "inline": [
-                "echo 'hello from packer'"
+                "echo 'Starting system update...'",
+                "sudo apt-get update -y",
+                "echo 'Installing Docker, htop and tmux...'",
+                "sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release htop tmux",
+                "echo 'Adding Docker GPG key and repository...'",
+                "curl -fsSL https://docker.com | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
+                "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://docker.com $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+                "sudo apt-get update -y",
+                "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+                "echo 'Enabling Docker service...'",
+                "sudo systemctl enable docker",
+                "echo 'Installation finished successfully!'"
             ]
         }
     ]
