@@ -1,4 +1,4 @@
-<img width="669" height="68" alt="image" src="https://github.com/user-attachments/assets/0da77c14-e144-4118-ad88-a8cb47b88625" />
+
 Из-за ограничений вложенной виртуализации вместо virtual-box использую doker.
 
 Ставлю докер
