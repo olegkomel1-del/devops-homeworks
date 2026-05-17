@@ -748,7 +748,7 @@ WARN[0000] Found orphan containers ([task5-portainer-1]) for this project. If yo
 <details>
 <summary>📸 Посмотреть скриншот с предупреждением Found orphan containers</summary>
 
-👉 *Перетащи сюда скриншот консоли*
+![скриншот консоли](![Uploading 17.png…])
 
 </details>
 
