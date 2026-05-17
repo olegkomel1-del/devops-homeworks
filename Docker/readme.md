@@ -356,4 +356,45 @@ Hey, Netology
 
 </details>
 
+### 13. Успешное исправление конфигурации при остановленном демоне Snap-Docker
+
+**Ход решения проблемы:**
+1. Полностью остановил службу Docker, управляемую пакетным менеджером Snap.
+2. Внес изменения в файлы конфигурации `hostconfig.json` и `config.v2.json` (теперь в `config.v2.json` были успешно изменены оба упоминания старого порта).
+3. Запустил службу Docker обратно и проверил доступность веб-сервера с хост-машины.
+
+**Ввод:**
+```bash
+sudo snap stop docker
+sudo nano /var/snap/docker/common/var-lib-docker/containers/5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5/config.v2.json
+sudo nano /var/snap/docker/common/var-lib-docker/containers/5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5/hostconfig.json
+sudo snap start docker
+docker start custom-nginx-t2
+curl http://127.0.0.1:8080
+```
+**Вывод:**
+```text
+2026-05-16T11:40:48Z INFO Waiting for "snap.docker.dockerd.service" to stop.
+Stopped.
+Started.
+custom-nginx-t2
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I will be DevOps Engineer!</h1>
+</body>
+</html>
+```
+
+> [!NOTE]
+> **Итог:** После корректной остановки демона изменения портов успешно применились. Теперь внешний порт хост-машины `8080` корректно пробрасывается на измененный внутренний порт контейнера `81`, а веб-сервер Nginx успешно отдает приветственную страницу. Задача полностью решена.
+
+<details>
+<summary>📸 Посмотреть скриншот успешного применения конфигурации и проверки curl</summary>
+
+![Финальный скриншот](https://github.com/user-attachments/assets/5e06a134-10da-431a-8a6d-5071abac20fe)
+
+</details>
 
