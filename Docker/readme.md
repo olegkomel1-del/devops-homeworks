@@ -420,3 +420,88 @@ custom-nginx-t2
 
 </details>
 
+## Задача 4
+
+Работа с общими томами данных (Docker Volumes) между хост-системой и контейнерами CentOS и Debian.
+
+### 1. Попытка запуска контейнера CentOS и исправление тега образа
+**Ввод:**
+```bash
+docker run -d --name centos-container -v $(pwd):/data centos sleep infinity
+# (После ошибки отсутствия манифеста latest)
+docker run -d --name centos-container -v $(pwd):/data centos:7 sleep infinity
+```
+**Вывод:**
+```text
+Unable to find image 'centos:latest' locally
+docker: Error response from daemon: manifest for centos:latest not found: manifest unknown: manifest unknown
+...
+7: Pulling from library/centos
+Digest: sha256:be65f488b7764ad3638f236b7b515b3678369a5124c47b8d32916d6487418ea4
+Status: Downloaded newer image for centos:7
+e5685816243658b951773057354df0f404f8941bb03e75bddd101b40b5376f72
+```
+
+### 2. Запуск контейнера Debian и проверка работающих сред
+**Ввод:**
+```bash
+docker run -d --name debian-container -v $(pwd):/data debian sleep infinity
+docker ps
+```
+**Вывод:**
+```text
+CONTAINER ID   IMAGE      COMMAND            CREATED          STATUS          PORTS     NAMES
+15e6adbeb369   debian     "sleep infinity"   5 seconds ago    Up 4 seconds              debian-container
+e56858162436   centos:7   "sleep infinity"   43 seconds ago   Up 42 seconds             centos-container
+```
+
+### 3. Запись данных в файлы из контейнера и хост-машины
+**Ввод:**
+```bash
+docker exec -it centos-container sh -c "echo 'Hello from CentOS' > /data/file1.txt"
+echo "Hello from Host" > file2.txt
+```
+*(Файлы создаются в общей смонтированной директории `$(pwd)` хоста и `/data` контейнеров)*
+
+### 4. Чтение и проверка общих данных из контейнера Debian
+**Ввод:**
+```bash
+docker exec -it debian-container sh -c "ls -la /data && cat /data/file1.txt && cat /data/file2.txt"
+```
+**Вывод:**
+```text
+total 84
+drwxr-x--- 11 1000 1000 4096 May 16 12:36 .
+drwxr-xr-x  1 root root 4096 May 16 12:35 ..
+-rw-r--r--  1 root root   18 May 16 12:36 file1.txt
+-rw-r--r--  1 1000 1000   16 May 16 12:36 file2.txt
+...
+Hello from CentOS
+Hello from Host
+```
+
+> [!NOTE]
+> **Вывод по эксперименту:** Контейнер Debian успешно видит и читает файлы `file1.txt` (созданный внутри CentOS) и `file2.txt` (созданный на хосте). Это подтверждает корректную работу сквозного монтирования папки хоста `$(pwd)` в изолированные директории `/data` обоих контейнеров.
+
+### 5. Принудительное удаление контейнеров и очистка созданных файлов
+**Ввод:**
+```bash
+docker rm -f centos-container debian-container && rm file1.txt file2.txt
+# (Дополнительное ручное удаление остатков файлов при необходимости)
+rm file1.txt
+docker ps
+ls
+```
+**Вывод:**
+```text
+centos-container
+debian-container
+rm: remove write-protected regular file 'file1.txt'? y
+```
+
+<details>
+<summary>📸 Посмотреть полный скриншот выполнения Задачи 4</summary>
+
+![Финальный скриншот](https://github.com/user-attachments/assets/99c350c2-d451-4bc8-be7c-bf6deb3ecef2)
+
+</details>
