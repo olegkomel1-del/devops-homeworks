@@ -577,3 +577,84 @@ task5-portainer-1   portainer/portainer-ce:latest    "/portainer"   portainer   
 ![Скриншот консоли с варнингами и успешным запуском](https://github.com/user-attachments/assets/7d502955-6d37-43e3-895d-9b5e43b2c51e)
 
 </details>
+
+### 3. Содержимое конфигурационного файла compose.yaml
+
+В файле конфигурации была использована директива `include` для импорта стороннего конфигурационного файла:
+
+```yaml
+version: "3"
+
+include:
+  - path: docker-compose.yaml
+
+services:
+  portainer:
+    network_mode: host
+    image: portainer/portainer-ce:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+### 4. Результат совместного развертывания сервисов через include
+
+После сохранения файла `compose.yaml` была выполнена повторная сборка окружения. Утилита `docker compose` успешно подтянула конфигурацию локального реестра (Registry) из импортированного файла.
+
+**Ввод:**
+```bash
+nano compose.yaml
+docker compose up -d
+docker compose ps
+```
+**Вывод:**
+```text
+WARN Found multiple config files with supported names...
+WARN Using /home/oleg/netology/docker/task5/compose.yaml
+...
+[+] up 9/9
+ ⠿ Image registry:2            Pulled
+ ⠿ Network task5_default       Created
+ ⠿ Container task5-portainer-1 Running
+ ⠿ Container task5-registry-1  Started
+
+NAME                IMAGE                           COMMAND                  SERVICE     CREATED          STATUS          PORTS
+task5-portainer-1   portainer/portainer-ce:latest   "/portainer"             portainer   6 minutes ago    Up 6 minutes    
+task5-registry-1    registry:2                      "/entrypoint.sh /etc…"   registry    5 seconds ago    Up 5 seconds    0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp
+```
+
+<details>
+<summary>📸 Посмотреть финальный скриншот работы двух сервисов</summary>
+
+![Скриншот, где видны оба запущенных контейнера](https://github.com/user-attachments/assets/4cd3fda6-89ec-4125-8746-616882364cb9)
+
+</details>
+
+### 5. Тегирование и отправка локального образа в собственный Registry
+
+Для проверки работоспособности поднятого Docker Registry локальный образ `custom_nginx` был переименован (тегирован) и отправлен в локальный реестр на порт `5000`:
+
+**Ввод:**
+```bash
+docker tag custom_nginx:latest 127.0.0.1:5000/custom_nginx:latest
+docker push 127.0.0.1:5000/custom_nginx:latest
+```
+**Вывод:**
+```text
+The push refers to repository [127.0.0.1:5000/custom_nginx]
+be551fb4e2bc: Pushed
+5f70bf18a086: Pushed
+2e174fd56089: Pushed
+727839498dfa: Pushed
+508937af8963: Pushed
+e9b5d470f331: Pushed
+5e1b8f458cec: Pushed
+d89e58119fc7: Pushed
+eb5f13bce993: Pushed
+latest: digest: sha256:f051d8c69b43d3242ad25983ab1ba855d5cf8c1029d3ff71b337ac1984c911df size: 2191
+```
+
+<details>
+<summary>📸 Посмотреть скриншот отправки образа (docker push)</summary>
+
+![Скриншот из терминала](https://github.com/user-attachments/assets/36d4a516-b69d-4869-8c59-432ff368c8d9)
+
+</details>
