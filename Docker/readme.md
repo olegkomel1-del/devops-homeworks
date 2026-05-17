@@ -257,6 +257,29 @@ cd /var/lib/docker
 
 </details>
 
+### 9. Глобальный поиск директории контейнера по системе
+
+**Ввод:**
+```bash
+sudo find / -name "5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5"
+```
+**Вывод:**
+```text
+find: warning: the -d option is deprecated; please use -depth instead...
+/var/snap/docker/common/var-lib-docker/containers/5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5
+/var/snap/docker/common/var-lib-docker/image/overlay2/layerdb/mounts/5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5
+```
+
+> [!NOTE]
+> **Ход мыслей:** С помощью команды `find` удалось обнаружить реальное расположение конфигурационных файлов контейнера. На тот момент истинная причина (установка Docker через пакетный менеджер Snap) ещё не была очевидна, но целевой путь `/var/snap/docker/...` был успешно найден.
+
+<details>
+<summary>📸 Посмотреть скриншот успешного поиска через find</summary>
+
+![Cкриншот консоли с результатами find](https://github.com/user-attachments/assets/78ca173e-2298-4668-b089-ed9296245e84)
+
+</details>
+
 
 
 
