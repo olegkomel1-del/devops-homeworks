@@ -683,3 +683,45 @@ services:
 ![Скриншот с Portainer](https://github.com/user-attachments/assets/cd1fb94c-7337-4ce5-8d1d-0db8cf451afd)
 
 </details>
+
+### 7. Инспектирование запущенного контейнера в Portainer
+
+Для окончательной проверки параметров развернутого сервиса был выполнен просмотр низкоуровневой конфигурации контейнера (аналог команды `docker inspect`).
+
+Ключевые параметры конфигурации из JSON-вывода:
+```json
+{
+  "Args": [],
+  "Config": {
+    "Cmd": [
+      "nginx",
+      "-g",
+      "daemon off;"
+    ],
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NGINX_VERSION=1.29.0"
+    ],
+    "ExposedPorts": {
+      "80/tcp": {}
+    }
+  },
+  "Image": "127.0.0.1:5000/custom-nginx:latest",
+  "Labels": {
+    "com.docker.compose.project": "netology-nginx",
+    "com.docker.compose.service": "nginx"
+  },
+  "Created": "2026-05-16T13:07:59.064085859Z",
+  "Driver": "overlay2"
+}
+```
+
+> [!NOTE]
+> **Итоговое заключение:** Анализ метаданных подтверждает, что стек `netology-nginx` функционирует корректно. Сервер использует кастомный образ Nginx версии `1.29.0`, успешно скачанный из локального репозитория, и работает на сетевом драйвере `overlay2`. 
+
+<details>
+<summary>📸 Посмотреть полный скриншот JSON-инспекции контейнера</summary>
+
+![Скриншот конфигурации](https://github.com/user-attachments/assets/c95ba7bf-463f-4a60-96ad-e8e1b2720682)
+
+</details>
