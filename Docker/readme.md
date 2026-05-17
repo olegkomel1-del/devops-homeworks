@@ -280,6 +280,28 @@ find: warning: the -d option is deprecated; please use -depth instead...
 
 </details>
 
+### 10. Редактирование низкоуровневых конфигурационных файлов контейнера
+
+Перешел по найденному Snap-пути и открыл файлы конфигурации контейнера через `nano` для ручного изменения портов:
+
+```bash
+cd /var/snap/docker/common/var-lib-docker/containers/5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5
+sudo nano config.v2.json
+sudo nano hostconfig.json
+```
+
+> [!IMPORTANT]
+> **Итог редактирования:** Были внесены изменения в порты внутри `hostconfig.json` и `config.v2.json`. В файле `config.v2.json` конфигурацию необходимо было поправить в двух местах, однако удалось применить только в одном. 
+> 
+> **Причина:** Так как демон Docker не был предварительно остановлен (из-за специфики Snap-пакета), запущенная служба удерживала конфигурацию контейнера в оперативной памяти и динамически перезаписывала JSON-файлы на диске, блокируя ручные изменения.
+
+<details>
+<summary>📸 Посмотреть скриншот структуры файлов config.v2.json и hostconfig.json в nano</summary>
+
+![Cкриншот открытого JSON-файла](https://github.com/user-attachments/assets/283bf64a-c56f-49c3-baa1-20a3d78af673)
+![Cкриншот открытого JSON-файла](https://github.com/user-attachments/assets/9136916a-169d-4059-a8b6-c2a674979e8d)
+
+</details>
 
 
 
