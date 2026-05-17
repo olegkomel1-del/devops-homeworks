@@ -326,5 +326,34 @@ curl: (56) Recv failure: Connection reset by peer
 
 </details>
 
+### 12. Финальная проверка состояния и маппинга портов
+
+**Ввод:**
+```bash
+docker exec -it custom-nginx-t2 curl http://127.0.0.1:81
+docker port custom-nginx-t2
+```
+**Вывод:**
+```html
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I will be DevOps Engineer!</h1>
+</body>
+</html>
+80/tcp -> 127.0.0.1:8080
+```
+
+> [!NOTE]
+> **Итоговый вывод :**  Веб-сервер внутри контейнера успешно отвечает на порту `81`. Однако привязать к нему внешний порт хост-машины через прямое редактирование конфигурационных файлов `config.v2.json` и `hostconfig.json` не удалось, так как работающий в фоне демон Snap-Docker перезаписал конфигурацию обратно на исходную (`80/tcp -> 127.0.0.1:8080`). Для успешного применения таких изменений требуется полная остановка службы Docker (в данном случае через `sudo snap stop docker`).
+
+<details>
+<summary>📸 Посмотреть скриншот финальной проверки портов</summary>
+
+![Cкриншот с тестом curl и docker port](https://github.com/user-attachments/assets/52f019f9-da15-493f-ae5b-6f8a0e5d09f7)
+
+</details>
 
 
