@@ -748,7 +748,32 @@ WARN[0000] Found orphan containers ([task5-portainer-1]) for this project. If yo
 <details>
 <summary>📸 Посмотреть скриншот с предупреждением Found orphan containers</summary>
 
-![скриншот консоли](![Uploading 17.png…])
+![скриншот консоли](https://github.com/user-attachments/assets/bb14ac8a-bf3c-4973-8897-2e905c756a3f)
+
+</details>
+
+### 9. Успешная остановка проекта и удаление потерянных контейнеров
+
+**Ввод:**
+```bash
+docker compose down --remove-orphans
+```
+**Вывод:**
+```text
+WARN /home/oleg/netology/docker/task5/docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+ ⠿ Container task5-registry-1  Removed
+ ⠿ Container task5-portainer-1 Removed
+ ⠿ Network task5_default       Removed
+```
+
+> [!NOTE]
+> **Итог очистки:** Команда `down` с флагом `--remove-orphans` полностью зачистила рабочее окружение. Были удалены как текущие активные сервисы и общая сеть проекта, так и изолированный («осиротевший») контейнер Portainer. Инфраструктура хост-машины приведена в исходное чистое состояние. Работа полностью завершена.
+
+<details>
+<summary>📸 Посмотреть скриншот успешного выполнения docker compose down</summary>
+
+![скриншот консоли](https://github.com/user-attachments/assets/cd5fdfbc-ff6d-4b58-b87a-38666108feef)
 
 </details>
 
