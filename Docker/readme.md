@@ -658,3 +658,28 @@ latest: digest: sha256:f051d8c69b43d3242ad25983ab1ba855d5cf8c1029d3ff71b337ac198
 ![Скриншот из терминала](https://github.com/user-attachments/assets/36d4a516-b69d-4869-8c59-432ff368c8d9)
 
 </details>
+
+### 6. Создание стека (Stack) в веб-интерфейсе Portainer
+
+Для финального развертывания веб-сервера был использован графический интерфейс Portainer (Community Edition). В разделе **Stacks** через встроенный веб-редактор (**Web editor**) был создан стек с именем `netology-nginx`.
+
+Конфигурация созданного стека:
+```yaml
+version: '3'
+
+services:
+  nginx:
+    image: 127.0.0.1:5000/custom-nginx:latest
+    ports:
+      - "9090:80"
+```
+
+> [!NOTE]
+> **Итог работы:** Окружение полностью связано между собой. Portainer успешно забирает кастомный образ веб-сервера из нашего локального приватного репозитория `127.0.0.1:5000` и разворачивает его в виде изолированного стека на порту `9090`. 
+
+<details>
+<summary>📸 Посмотреть скриншот конфигурации стека в веб-интерфейсе Portainer</summary>
+
+![Скриншот с Portainer](https://github.com/user-attachments/assets/cd1fb94c-7337-4ce5-8d1d-0db8cf451afd)
+
+</details>
