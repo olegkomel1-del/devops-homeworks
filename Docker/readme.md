@@ -725,3 +725,31 @@ services:
 ![Скриншот конфигурации](https://github.com/user-attachments/assets/c95ba7bf-463f-4a60-96ad-e8e1b2720682)
 
 </details>
+
+### 8. Удаление compose.yaml и очистка потерянных (orphan) контейнеров
+
+**Ввод:**
+```bash
+rm compose.yaml
+docker compose up -d
+docker compose down --remove-orphans
+```
+**Вывод:**
+```text
+WARN[0000] /home/oleg/netology/docker/task5/docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+WARN[0000] Found orphan containers ([task5-portainer-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.
+[+] up 1/1
+ ⠿ Container task5-registry-1 Running
+```
+
+> [!WARNING]
+> **Разбор ситуации:** Предупреждение сообщает о наличии потерянных (orphan) контейнеров. Это произошло потому, что файл конфигурации `compose.yaml` был удалён, и Docker Compose больше «не знает» про описанный там сервис `portainer`, хотя сам контейнер всё ещё запущен в системе. Для корректной очистки таких ресурсов и приведения окружения в порядок в дальнейшем применяется команда `docker compose down --remove-orphans`.
+
+<details>
+<summary>📸 Посмотреть скриншот с предупреждением Found orphan containers</summary>
+
+👉 *Перетащи сюда скриншот консоли*
+
+</details>
+
+
