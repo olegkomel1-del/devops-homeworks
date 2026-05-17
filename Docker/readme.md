@@ -537,3 +537,43 @@ compose.yaml  docker-compose.yaml
 ![Скриншот подготовки рабочей директории и траблшутинга путей](https://github.com/user-attachments/assets/f81b37b0-f468-46cf-897d-1cd88b8c21f4)
 
 </details>
+
+### 2. Копирование конфигурации и запуск Docker Compose
+
+**Ввод:**
+```bash
+cp /tmp/netology/docker/task5/*.yaml .
+ls
+docker compose up -d
+docker compose ps
+```
+**Вывод:**
+```text
+compose.yaml  docker-compose.yaml
+
+WARN[0000] Found multiple config files with supported names: /home/oleg/netology/docker/task5/compose.yaml, /home/oleg/netology/docker/task5/docker-compose.yaml
+WARN[0000] Using /home/oleg/netology/docker/task5/compose.yaml
+WARN[0000] /home/oleg/netology/docker/task5/compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 10/10
+ ⠿ Image portainer/portainer-ce:latest Pulled
+ ⠿ Container task5-portainer-1         Started
+
+WARN[0000] Found multiple config files with supported names...
+WARN[0000] Using /home/oleg/netology/docker/task5/compose.yaml
+...
+NAME                IMAGE                            COMMAND        SERVICE     CREATED             STATUS
+task5-portainer-1   portainer/portainer-ce:latest    "/portainer"   portainer   About a minute ago  Up About a minute
+```
+
+> [!IMPORTANT]
+> **Анализ приоритетов конфигурационных файлов:**
+> При запуске оркестратора утилита обнаружила два файла конфигурации. В соответствии со спецификацией Docker Compose, файл **`compose.yaml`** имеет наивысший приоритет, поэтому система выбрала именно его для развертывания панели управления Portainer, проигнорировав `docker-compose.yaml`.
+> 
+> Также лог предупреждает, что директива `version` в современных версиях Docker Compose является устаревшей (`obsolete`) и автоматически игнорируется.
+
+<details>
+<summary>📸 Посмотреть скриншот запуска Portainer через Docker Compose</summary>
+
+![Скриншот консоли с варнингами и успешным запуском](https://github.com/user-attachments/assets/7d502955-6d37-43e3-895d-9b5e43b2c51e)
+
+</details>
