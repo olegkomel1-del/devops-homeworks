@@ -125,73 +125,7 @@ curl: (7) Failed to connect to 127.0.0.1 port 80 after 0 ms: Couldn't connect to
 
 <details>
 <summary>📸 Посмотреть полный скриншот выполнения шага 1</summary>
-
-👉 *## Задача 3
-
-### 1. Остановка, запуск и вход внутрь контейнера
-**Ввод:**
-```bash
-docker attach custom-nginx-t2
-# (После нажатия Ctrl+C для выхода и остановки контейнера)
-docker ps -a
-docker start custom-nginx-t2
-docker exec -it custom-nginx-t2 bash
-```
-**Вывод:**
-```text
-^C2026/05/16 03:09:28 [notice] 1#1: signal 2 (SIGINT) received, exiting
-2026/05/16 03:09:28 [notice] 29#29: exiting
-2026/05/16 03:09:29: exit
-2026/05/16 03:09:28 [notice] 1#1: signal 17 (SIGCHLD) received from 29
-2026/05/16 03:09:28 [notice] 1#1: worker process 29 exited with code 0
-2026/05/16 03:09:29 [notice] 1#1: exit
-
-CONTAINER ID   IMAGE                 COMMAND                  CREATED          STATUS                       PORTS     NAMES
-5241a0d49f50   custom_nginx:latest   "/docker-entrypoint.…"   35 minutes ago   Exited (0) 15 seconds ago              custom-nginx-t2
-496a78e68e8b   custom_nginx          "/docker-entrypoint.…"   About an hour ago Exited (137) 38 minutes ago           general
-7d5afcc978d0   ubuntu:20.04          "/bin/bash"              9 days ago       Exited (0) 9 days ago                  vagrant_docker_test_default_1778074530
-
-custom-nginx-t2
-root@5241a0d49f50:/usr/share/nginx/html#
-```
-
-### 2. Обновление пакетов и установка редактора nano внутри контейнера
-**Ввод:**
-```bash
-apt-get update && apt-get install -y nano
-```
-**Вывод:**
-```text
-Get:1 http://debian.org bookworm InRelease [151 kB]
-...
-The following NEW packages will be installed:
-  libgpm2 libncursesw6 nano
-0 upgraded, 3 newly installed, 0 to remove and 38 not upgraded.
-Need to get 838 kB of archives.
-...
-Setting up nano (7.2-1+deb12u1) ...
-update-alternatives: using /bin/nano to provide /usr/bin/editor (editor) in auto mode
-```
-
-### 3. Изменение конфигурации Nginx и проверка доступности
-**Ввод:**
-```bash
-nano /etc/nginx/conf.d/default.conf
-nginx -s reload
-curl http://127.0.0.1:80
-```
-**Вывод:**
-```text
-2026/05/16 03:13:22 [notice] 174#174: signal process started
-curl: (7) Failed to connect to 127.0.0.1 port 80 after 0 ms: Couldn't connect to server
-```
-
-<details>
-<summary>📸 Посмотреть полный скриншот выполнения шага 1</summary>
-
-👉 *![Uploading image.png…]()
-*
-
+https://github.com/user-attachments/assets/1aeaf3bf-eb46-4490-a454-869151b70bf9
 </details>
 
 
