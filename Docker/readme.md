@@ -124,8 +124,10 @@ curl: (7) Failed to connect to 127.0.0.1 port 80 after 0 ms: Couldn't connect to
 ```
 
 <details>
-<summary>📸 Посмотреть полный скриншот выполнения шага 1</summary>
-https://github.com/user-attachments/assets/1aeaf3bf-eb46-4490-a454-869151b70bf9
+<summary>📸 Посмотреть полный скриншот выполнения шага 1</summary>  
+ 
+![Скриншот 1 части 3 задачи](https://github.com/user-attachments/assets/1aeaf3bf-eb46-4490-a454-869151b70bf9) 
+
 </details>
 
 
