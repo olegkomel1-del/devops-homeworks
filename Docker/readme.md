@@ -60,8 +60,12 @@ Connection: keep-alive
 ETag: "6a07c88a-5f"
 Accept-Ranges: bytes
 ```
-### 5. Полный скриншот из консоли:
-![Скриншот по второй задачи](https://github.com/user-attachments/assets/98da4add-11ba-47b7-a40f-3ffcf8d37053)
+<details>
+<summary>📸 Посмотреть полный скриншот из консоли для 2 задачи</summary>  
+
+![Скриншот по второй задачи](https://github.com/user-attachments/assets/98da4add-11ba-47b7-a40f-3ffcf8d37053)  
+
+</details>
 
 ## Задача 3  
 
@@ -128,6 +132,132 @@ curl: (7) Failed to connect to 127.0.0.1 port 80 after 0 ms: Couldn't connect to
  
 ![Скриншот 1 части 3 задачи](https://github.com/user-attachments/assets/1aeaf3bf-eb46-4490-a454-869151b70bf9) 
 
+</details>  
+
+> [!NOTE]
+> **Объяснение:** Контейнер остановился, потому что команда `docker attach` привязывает ваш терминал к основному процессу внутри контейнера, которым является Nginx. Когда мы нажали `Ctrl + C`, мы прервали главный процесс. Так как в Docker контейнер живет ровно столько, сколько живет его основной процесс, завершение Nginx привело к немедленной остановке всего контейнера.
+
+### 4. Редактирование конфигурационного файла Nginx
+Изменил порт в файле конфигурации `/etc/nginx/conf.d/default.conf` через редактор `nano` на порт `81`:
+
+```nginx
+server {
+    listen       81;
+    listen  [::]:80;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+```
+### 5. Проверка доступности Nginx на новом порту
+
+**Ввод (внутри контейнера):**
+```bash
+curl http://127.0.0.1:81
+exit
+```
+**Вывод:**
+```html
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I will be DevOps Engineer!</h1>
+</body>
+</html>
+```
+
+### 6. Проверка проброса портов с хост-машины
+
+**Ввод (на хост-системе):**
+```bash
+ss -tlpn | grep 127.0.0.1:8080
+docker port custom-nginx-t2
+curl http://127.0.0.1:8080
+```
+**Вывод:**
+```text
+LISTEN 0      4096       127.0.0.1:8080       0.0.0.0:*
+80/tcp -> 127.0.0.1:8080
+curl: (52) Empty reply from server
+```
+
+> [!WARNING]
+> **Причина ошибки (Empty reply from server):** Запрос `curl` на хосте завершился ошибкой, так как при старте контейнера был настроен маппинг портов `8080:80`. После того как внутри контейнера в конфигурации Nginx порт был изменен с `80` на `81`, трафик с хоста (порт 8080) переправляется на порт 80 контейнера, который теперь никто не слушает.
+
+<details>
+<summary>📸 Посмотреть полный скриншот тестов портов и curl</summary>
+
+![Скриншот тестов портов и curl](https://github.com/user-attachments/assets/53b35063-6977-4f7f-8d10-a1adb18a3def)
+
 </details>
+
+## Пункт 11*  
+
+### 7. Остановка контейнера и попытка остановки демона Docker
+
+**Ввод:**
+```bash
+docker stop custom-nginx-t2
+sudo systemctl stop docker
+```
+**Вывод:**
+```text
+custom-nginx-t2
+Failed to stop docker.service: Unit docker.service not loaded.
+```
+
+> [!WARNING]
+> **Важное примечание:** На данном этапе я не придал значения ошибке `Unit docker.service not loaded`. Демон Docker не был остановлен стандартным системным диспетчером, что в дальнейшем привело к проблемам с выполнением следующих заданий.
+
+<details>
+<summary>📸 Посмотреть скриншот неудачной остановки демона</summary>
+
+![Cкриншот с ошибками systemctl](https://github.com/user-attachments/assets/509b95b6-ee86-414e-991f-37a56e07438e)
+
+</details>
+
+### 8. Попытка поиска конфигурационного файла контейнера на хосте
+
+**Ввод:**
+```bash
+docker inspect custom-nginx-t2 | grep Id
+sudo nano /var/lib/docker/containers/5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5/config.v2.json
+cd /var/lib/docker
+```
+**Вывод:**
+```text
+    "Id": "5241a0d49f50c91d518d1e15fb2252d57a551f1f8bd5b7552cde152a404c41d5",
+-bash: cd: /var/lib/docker: No such file or directory
+```
+
+> [!CAUTION]
+> **Очередная проблема:** При попытке перейти в директорию `/var/lib/docker` система сообщила, что такого пути не существует. 
+
+
+<details>
+<summary>📸 Посмотреть скриншот ошибки отсутствия директории /var/lib/docker</summary>
+
+![скриншот ошибки отсутствия директории /var/lib/docker</summary](https://github.com/user-attachments/assets/ed08062c-8e3b-4683-beaf-ebcf95e41c27)
+
+</details>
+
+
+
 
 
