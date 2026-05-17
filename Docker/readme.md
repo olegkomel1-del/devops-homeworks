@@ -505,3 +505,35 @@ rm: remove write-protected regular file 'file1.txt'? y
 ![Финальный скриншот](https://github.com/user-attachments/assets/99c350c2-d451-4bc8-be7c-bf6deb3ecef2)
 
 </details>
+
+## Задача 5
+
+### 1. Подготовка рабочей директории и траблшутинг путей
+**Ввод:**
+```bash
+mkdir -p /tmp/netology/docker/task5
+cd /tmp/netology/docker/task5
+nano compose.yaml
+nano docker-compose.yaml
+docker compose up -d
+ls
+# (После ошибки отсутствия конфигурационного файла переносим проект в домашнюю директорию)
+mkdir -p ~/netology/docker/task5
+cd ~/netology/docker/task5
+```
+**Вывод:**
+```text
+docker compose up -d
+no configuration file provided: not found
+compose.yaml  docker-compose.yaml
+```
+
+> [!WARNING]
+> **Разбор проблемы:** При первой попытке запуска в директории `/tmp` утилита `docker compose` выдала ошибку отсутствия файлов конфигурации, несмотря на то, что `ls` подтвердил их наличие. Это частая проблема Snap-версий Docker, которые имеют ограниченный доступ к глобальным временным каталогам системы (`/tmp`). Для исправления этой проблемы рабочее окружение было перенесено в домашнюю директорию пользователя `~/netology/...`.
+
+<details>
+<summary>📸 Посмотреть полный скриншот подготовки рабочей директории и траблшутинга путей</summary>
+
+![Скриншот подготовки рабочей директории и траблшутинга путей](https://github.com/user-attachments/assets/f81b37b0-f468-46cf-897d-1cd88b8c21f4)
+
+</details>
