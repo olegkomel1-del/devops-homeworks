@@ -1,7 +1,11 @@
 <details>
+  
 <summary>
+  
 # Задание 0
-</summary>  
+
+</summary>    
+
 ## 1. Проверка версии Docker Compose перед удалением  
 
 ### Ввод:
