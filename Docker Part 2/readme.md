@@ -233,6 +233,6 @@ Docker Compose version v5.1.4
 ![Скриншот вывод версий Docker Compose](https://github.com/user-attachments/assets/eee10674-e9b5-4b95-8489-5935832a1f4d)
 
 
-<details>
+</details>
 
 
