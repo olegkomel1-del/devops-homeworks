@@ -106,6 +106,8 @@ docker-compose --version
 -bash: /snap/bin/docker-compose: No such file or directory
 ```
 
+## 10. Скриншот по нулевой задачи
+
 ![Скриншот по нулевой задачи](https://github.com/user-attachments/assets/c1e67e86-93db-4b97-ad19-17397c61a94c)
 
 </details>
