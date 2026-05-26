@@ -120,6 +120,22 @@ docker-compose --version
 
 </summary>    
 
+## 1. Установка необходимых системных утилит
+
+### Ввод:
+```bash
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg
+``` 
+### Вывод:
+```text
+Получено 322 MB за 1мин 6с (4 894 kB/s)
+Чтение списков пакетов… Готово
+
+Уже установлен пакет curl самой новой версии (8.5.0-2ubuntu10.9).
+Уже установлен пакет gnupg самой новой версии (2.4.4-2ubuntu17.4).
+```
+
 <details>
 
 
