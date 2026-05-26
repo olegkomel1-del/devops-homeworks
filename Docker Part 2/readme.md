@@ -307,12 +307,14 @@ Receiving objects: 100% (85/85), 59.93 KiB | 222.00 KiB/s, done.
 Resolving deltas: 100% (22/22), done.
 ```
 
-Проверяем наличие файлов
-ls -l
-drwxrwxr-x 2 oleg oleg 4096 мая 26 13:17 shvirtd-example-python
-
+### Проверяю наличие файлов
+### Ввод:
+```bash
 cd shvirtd-example-python/
 ls -l
+```
+### Вывод:
+```text
 -rw-rw-r-- 1 oleg oleg   241 мая 26 13:25 Dockerfile
 -rw-rw-r-- 1 oleg oleg   550 мая 26 13:25 Dockerfile.python
 drwxrwxr-x 3 oleg oleg  4096 мая 26 13:25 haproxy
@@ -323,9 +325,15 @@ drwxrwxr-x 3 oleg oleg  4096 мая 26 13:25 nginx
 -rw-rw-r-- 1 oleg oleg  4093 мая 26 13:25 README.md
 -rw-rw-r-- 1 oleg oleg    73 мая 26 13:25 requirements.txt
 -rw-rw-r-- 1 oleg oleg 39767 мая 26 13:25 schema.pdf
+```
 
-Тестирование корректности сборки многоэтапного Dockerfile.python
+### Тестирую сборку
+### Ввод:
+```bash
 docker build -f Dockerfile.python -t my-python-app:latest .
+```
+### Вывод:
+```text
 [+] Building 88.1s (13/13) FINISHED                                                                      docker:default
  => [internal] load build definition from Dockerfile.python                                                        0.1s
  => => transferring dockerfile: 596B                                                                               0.0s
@@ -344,9 +352,8 @@ docker build -f Dockerfile.python -t my-python-app:latest .
  => [runner 5/5] COPY . .                                                                                          0.1s
  => exporting to image                                                                                            10.5s
  => => naming to docker.io/library/my-python-app:latest                                                            0.0s
- 
-
-
-
+```
+### Скриншот тестирования сборки
+![Скриншот тестирования сборки](https://github.com/user-attachments/assets/867c5032-5334-40b4-8861-9253facae0f1)
 
 </details>
