@@ -232,7 +232,68 @@ Docker Compose version v5.1.4
 ## 8. Скриншот вывод версий Docker Compose
 ![Скриншот вывод версий Docker Compose](https://github.com/user-attachments/assets/eee10674-e9b5-4b95-8489-5935832a1f4d)
 
-
 </details>
 
+<details>
+  
+<summary>
+  
+# Задание 1 
 
+</summary>    
+
+## 1. Fork
+
+Склонируйте ваш репозиторий по корректной ссылке
+git clone https://github.com/olegkomel1-del/shvirtd-example-python/
+Cloning into 'shvirtd-example-python'...
+remote: Enumerating objects: 85, done.
+remote: Counting objects: 100% (6/6), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 85 (delta 1), reused 0 (delta 0), pack-reused 79 (from 1)
+Receiving objects: 100% (85/85), 59.93 KiB | 222.00 KiB/s, done.
+Resolving deltas: 100% (22/22), done.
+
+Проверяем наличие файлов
+ls -l
+drwxrwxr-x 2 oleg oleg 4096 мая 26 13:17 shvirtd-example-python
+
+cd shvirtd-example-python/
+ls -l
+-rw-rw-r-- 1 oleg oleg   241 мая 26 13:25 Dockerfile
+-rw-rw-r-- 1 oleg oleg   550 мая 26 13:25 Dockerfile.python
+drwxrwxr-x 3 oleg oleg  4096 мая 26 13:25 haproxy
+-rw-rw-r-- 1 oleg oleg  1036 мая 26 13:25 LICENSE
+-rw-rw-r-- 1 oleg oleg  7030 мая 26 13:25 main.py
+drwxrwxr-x 3 oleg oleg  4096 мая 26 13:25 nginx
+-rw-rw-r-- 1 oleg oleg   567 мая 26 13:25 proxy.yaml
+-rw-rw-r-- 1 oleg oleg  4093 мая 26 13:25 README.md
+-rw-rw-r-- 1 oleg oleg    73 мая 26 13:25 requirements.txt
+-rw-rw-r-- 1 oleg oleg 39767 мая 26 13:25 schema.pdf
+
+Тестирование корректности сборки многоэтапного Dockerfile.python
+docker build -f Dockerfile.python -t my-python-app:latest .
+[+] Building 88.1s (13/13) FINISHED                                                                      docker:default
+ => [internal] load build definition from Dockerfile.python                                                        0.1s
+ => => transferring dockerfile: 596B                                                                               0.0s
+ => [internal] load metadata for docker.io/library/python:3.12-slim                                                3.2s
+ => [internal] load .dockerignore                                                                                  0.1s
+ => => transferring context: 109B                                                                                  0.0s
+ => [internal] load build context                                                                                  0.1s
+ => => transferring context: 55.44kB                                                                               0.0s
+ => [builder 1/5] FROM docker.io/library/python:3.12-slim@sha256:090ba77e2958f6af52a5341f788b50b032dd4ca28377d289  6.6s
+ => [builder 2/5] WORKDIR /app                                                                                     0.5s
+ => [builder 3/5] RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     && rm  42.1s
+ => [builder 4/5] COPY requirements.txt .                                                                          0.3s
+ => [builder 5/5] RUN pip install --no-cache-dir --user -r requirements.txt                                       21.7s
+ => [runner 3/5] COPY --from=builder /root/.local /root/.local                                                     0.9s
+ => [runner 4/5] COPY --from=builder /app /app                                                                     0.1s
+ => [runner 5/5] COPY . .                                                                                          0.1s
+ => exporting to image                                                                                            10.5s
+ => => naming to docker.io/library/my-python-app:latest                                                            0.0s
+ 
+
+
+
+
+</details>
