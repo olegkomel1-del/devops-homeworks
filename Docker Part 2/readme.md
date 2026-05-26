@@ -112,7 +112,14 @@ docker-compose --version
 
 </details>
 
+<details>
+  
+<summary>
+  
+# Задание 0 (Установка)
 
+</summary>    
 
+<details>
 
 
