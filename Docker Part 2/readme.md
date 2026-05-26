@@ -248,6 +248,7 @@ Docker Compose version v5.1.4
 
 ## 2. Создаю файл Dockerfile.python на основе существующего Dockerfile и .dockerignore
 
+### .gitignore
 ```text
 .git
 .gitignore
@@ -260,12 +261,43 @@ venv/
 .venv
 env/
 ```
-### Скриншот из Github
-![Скриншот из Github](https://github.com/user-attachments/assets/61f0914c-755a-4b64-a9da-0b3c363aa99f)
 
+### Скриншот .gitignore из Github
+![Скриншот .gitignore из Github](https://github.com/user-attachments/assets/61f0914c-755a-4b64-a9da-0b3c363aa99f)
 
-Склонируйте ваш репозиторий по корректной ссылке
+### Dockerfile.python
+```text
+# --- Этап 1:  ---
+FROM python:3.12-slim AS builder
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+# --- Этап 2:  ---
+FROM python:3.12-slim AS runner
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+COPY --from=builder /app /app
+ENV PATH=/root/.local/bin:$PATH
+COPY . .
+EXPOSE 5000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+```
+
+### Скриншот Dockerfile.python из Github
+![Скриншот Dockerfile.python из Github](https://github.com/user-attachments/assets/c99310f5-1040-4fc8-9d68-f4404c15738f)
+
+## 3. Тестирование корректности сборки многоэтапного Dockerfile.python
+
+### Клонирую репозиторий
+### Ввод:
+```bash
 git clone https://github.com/olegkomel1-del/shvirtd-example-python/
+```
+### Вывод:
+```text
 Cloning into 'shvirtd-example-python'...
 remote: Enumerating objects: 85, done.
 remote: Counting objects: 100% (6/6), done.
@@ -273,6 +305,7 @@ remote: Compressing objects: 100% (6/6), done.
 remote: Total 85 (delta 1), reused 0 (delta 0), pack-reused 79 (from 1)
 Receiving objects: 100% (85/85), 59.93 KiB | 222.00 KiB/s, done.
 Resolving deltas: 100% (22/22), done.
+```
 
 Проверяем наличие файлов
 ls -l
