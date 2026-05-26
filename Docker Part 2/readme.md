@@ -2,7 +2,7 @@
   
 <summary>
   
-# Задание 0
+# Задание 0 (Удаление)
 
 </summary>    
 
@@ -106,9 +106,9 @@ docker-compose --version
 -bash: /snap/bin/docker-compose: No such file or directory
 ```
 
-## 10. Скриншот по нулевой задачи
+## 10. Скриншот удаление Docker, Docker Compose
 
-![Скриншот по нулевой задачи](https://github.com/user-attachments/assets/c1e67e86-93db-4b97-ad19-17397c61a94c)
+![Скриншот удаление Docker, Docker Compose](https://github.com/user-attachments/assets/c1e67e86-93db-4b97-ad19-17397c61a94c)
 
 </details>
 
