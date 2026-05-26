@@ -9,13 +9,11 @@
 ## 1. Проверка версии Docker Compose перед удалением  
 
 ### Ввод:
-```
-**bash**
+```bash
 docker-compose --version
 ``` 
 ### Вывод:
-```
-**text**
+```text
 Docker Compose version v5.1.1
 ```
 
