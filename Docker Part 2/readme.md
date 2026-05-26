@@ -242,7 +242,27 @@ Docker Compose version v5.1.4
 
 </summary>    
 
-## 1. Fork
+## 1. Делаю в своем GitHub пространстве fork репозитория.
+
+![Делаю в своем GitHub пространстве fork репозитория](https://github.com/user-attachments/assets/e9d39aa6-6327-4e48-8120-e8d226d94360)
+
+## 2. Создаю файл Dockerfile.python на основе существующего Dockerfile и .dockerignore
+
+```text
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv
+env/
+```
+### Скриншот из Github
+![Скриншот из Github](https://github.com/user-attachments/assets/61f0914c-755a-4b64-a9da-0b3c363aa99f)
+
 
 Склонируйте ваш репозиторий по корректной ссылке
 git clone https://github.com/olegkomel1-del/shvirtd-example-python/
