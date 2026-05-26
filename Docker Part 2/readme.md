@@ -136,6 +136,19 @@ sudo apt-get install -y ca-certificates curl gnupg
 Уже установлен пакет gnupg самой новой версии (2.4.4-2ubuntu17.4).
 ```
 
+## 2. Проверка файла ключа
+
+### Ввод:
+```bash
+ gpg --show-keys /etc/apt/keyrings/docker.gpg
+``` 
+### Вывод:
+```text
+gpg: directory '/home/oleg/.gnupg' created
+gpg: keybox '/home/oleg/.gnupg/pubring.kbx' created
+gpg: can't open '/etc/apt/keyrings/docker.gpg': No such file or directory
+```
+
 <details>
 
 
