@@ -149,6 +149,19 @@ gpg: keybox '/home/oleg/.gnupg/pubring.kbx' created
 gpg: can't open '/etc/apt/keyrings/docker.gpg': No such file or directory
 ```
 
+## 3. Проверка папки для ключей и самого старого ключа (Его удаление)
+
+### Ввод:
+```bash
+ls -l /etc/apt/keyrings/
+sudo rm -f /etc/apt/keyrings/docker.gpg
+ls -l /etc/apt/keyrings/
+``` 
+### Вывод:
+```text
+-rw-r--r-- 1 root root 0 мая 26 12:12 docker.gpg
+total 0
+```
 <details>
 
 
