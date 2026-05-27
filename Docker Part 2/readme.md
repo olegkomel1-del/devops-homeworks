@@ -547,3 +547,91 @@ INFO:     Uvicorn running on http://0.0.0 (Press CTRL+C to quit)
 Все требования технического задания выполнены. Оригинальные файлы репозитория сохранены в первозданном виде. Написанный bash-скрипт успешно очистил строки от кавычек в памяти процесса, установил стабильное соединение с БД и динамически переименовал целевую таблицу в 'oleg_super_table'.
 
 </details>
+
+<details>
+  
+<summary>
+  
+# Задание 2* 
+
+</summary>   
+
+## Короткий отчёт
+
+```yaml
+id: chemq8ida6fc4helgt4t
+image_id: crpukooedqf8k5fpjrt7
+scanned_at: "2026-05-27T12:14:44.141Z"
+status: READY
+vulnerabilities:
+  critical: "6"
+  high: "50"
+  medium: "138"
+  low: "163"
+  undefined: "8"
+```
+
+## Расширенный отчет с фильтрацией по уровню угрозы ('CRITICAL', 'HIGH')
+
++----------+----------------+--------+--------+------------------+-------------------------+--------------------+--------------------------------------------+
+| SEVERITY |      NAME      | ORIGIN |  TYPE  |     PACKAGE      |         VERSION         |      FIXED BY      |                    LINK                    |
++----------+----------------+--------+--------+------------------+-------------------------+--------------------+--------------------------------------------+
+| CRITICAL | CVE-2023-6879  | os     | debian | libaom3          | 3.6.0-1+deb12u1         |                    | https://avd.aquasec.com/nvd/cve-2023-6879  |
+| CRITICAL | CVE-2026-33845 | os     | debian | libgnutls30      | 3.7.9-2+deb12u5         | 3.7.9-2+deb12u7    | https://avd.aquasec.com/nvd/cve-2026-33845 |
+| CRITICAL | CVE-2026-42010 | os     | debian | libgnutls30      | 3.7.9-2+deb12u5         | 3.7.9-2+deb12u7    | https://avd.aquasec.com/nvd/cve-2026-42010 |
+| CRITICAL | CVE-2026-31789 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-31789 |
+| CRITICAL | CVE-2026-31789 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-31789 |
+| CRITICAL | CVE-2023-45853 | os     | debian | zlib1g           | 1:1.2.13.dfsg-1         |                    | https://avd.aquasec.com/nvd/cve-2023-45853 |
+| HIGH     | CVE-2026-5773  | os     | debian | curl             | 7.88.1-10+deb12u12      |                    | https://avd.aquasec.com/nvd/cve-2026-5773  |
+| HIGH     | CVE-2026-6276  | os     | debian | curl             | 7.88.1-10+deb12u12      |                    | https://avd.aquasec.com/nvd/cve-2026-6276  |
+| HIGH     | CVE-2025-68973 | os     | debian | gpgv             | 2.2.40-1.1              | 2.2.40-1.1+deb12u2 | https://avd.aquasec.com/nvd/cve-2025-68973 |
+| HIGH     | CVE-2023-39616 | os     | debian | libaom3          | 3.6.0-1+deb12u1         |                    | https://avd.aquasec.com/nvd/cve-2023-39616 |
+| HIGH     | CVE-2026-4878  | os     | debian | libcap2          | 1:2.66-4+deb12u1        | 1:2.66-4+deb12u3   | https://avd.aquasec.com/nvd/cve-2026-4878  |
+| HIGH     | CVE-2026-5773  | os     | debian | libcurl4         | 7.88.1-10+deb12u12      |                    | https://avd.aquasec.com/nvd/cve-2026-5773  |
+| HIGH     | CVE-2026-6276  | os     | debian | libcurl4         | 7.88.1-10+deb12u12      |                    | https://avd.aquasec.com/nvd/cve-2026-6276  |
+| HIGH     | CVE-2026-33164 | os     | debian | libde265-0       | 1.0.11-1+deb12u2        |                    | https://avd.aquasec.com/nvd/cve-2026-33164 |
+| HIGH     | CVE-2023-52425 | os     | debian | libexpat1        | 2.5.0-1+deb12u1         | 2.5.0-1+deb12u2    | https://avd.aquasec.com/nvd/cve-2023-52425 |
+| HIGH     | CVE-2026-25210 | os     | debian | libexpat1        | 2.5.0-1+deb12u1         |                    | https://avd.aquasec.com/nvd/cve-2026-25210 |
+| HIGH     | CVE-2026-45186 | os     | debian | libexpat1        | 2.5.0-1+deb12u1         |                    | https://avd.aquasec.com/nvd/cve-2026-45186 |
+| HIGH     | CVE-2026-33846 | os     | debian | libgnutls30      | 3.7.9-2+deb12u5         | 3.7.9-2+deb12u7    | https://avd.aquasec.com/nvd/cve-2026-33846 |
+| HIGH     | CVE-2026-3833  | os     | debian | libgnutls30      | 3.7.9-2+deb12u5         | 3.7.9-2+deb12u7    | https://avd.aquasec.com/nvd/cve-2026-3833  |
+| HIGH     | CVE-2026-42009 | os     | debian | libgnutls30      | 3.7.9-2+deb12u5         | 3.7.9-2+deb12u7    | https://avd.aquasec.com/nvd/cve-2026-42009 |
+| HIGH     | CVE-2026-40356 | os     | debian | libgssapi-krb5-2 | 1.20.1-2+deb12u3        | 1.20.1-2+deb12u5   | https://avd.aquasec.com/nvd/cve-2026-40356 |
+| HIGH     | CVE-2025-68431 | os     | debian | libheif1         | 1.15.1-1+deb12u1        |                    | https://avd.aquasec.com/nvd/cve-2025-68431 |
+| HIGH     | CVE-2026-32740 | os     | debian | libheif1         | 1.15.1-1+deb12u1        |                    | https://avd.aquasec.com/nvd/cve-2026-32740 |
+| HIGH     | CVE-2026-32741 | os     | debian | libheif1         | 1.15.1-1+deb12u1        |                    | https://avd.aquasec.com/nvd/cve-2026-32741 |
+| HIGH     | CVE-2026-32882 | os     | debian | libheif1         | 1.15.1-1+deb12u1        |                    | https://avd.aquasec.com/nvd/cve-2026-32882 |
+| HIGH     | CVE-2026-40356 | os     | debian | libk5crypto3     | 1.20.1-2+deb12u3        | 1.20.1-2+deb12u5   | https://avd.aquasec.com/nvd/cve-2026-40356 |
+| HIGH     | CVE-2026-40356 | os     | debian | libkrb5-3        | 1.20.1-2+deb12u3        | 1.20.1-2+deb12u5   | https://avd.aquasec.com/nvd/cve-2026-40356 |
+| HIGH     | CVE-2026-40356 | os     | debian | libkrb5support0  | 1.20.1-2+deb12u3        | 1.20.1-2+deb12u5   | https://avd.aquasec.com/nvd/cve-2026-40356 |
+| HIGH     | CVE-2023-2953  | os     | debian | libldap-2.5-0    | 2.5.13+dfsg-5           |                    | https://avd.aquasec.com/nvd/cve-2023-2953  |
+| HIGH     | CVE-2026-27135 | os     | debian | libnghttp2-14    | 1.52.0-1+deb12u2        | 1.52.0-1+deb12u3   | https://avd.aquasec.com/nvd/cve-2026-27135 |
+| HIGH     | CVE-2026-22695 | os     | debian | libpng16-16      | 1.6.39-2                | 1.6.39-2+deb12u2   | https://avd.aquasec.com/nvd/cve-2026-22695 |
+| HIGH     | CVE-2026-22801 | os     | debian | libpng16-16      | 1.6.39-2                | 1.6.39-2+deb12u2   | https://avd.aquasec.com/nvd/cve-2026-22801 |
+| HIGH     | CVE-2026-25646 | os     | debian | libpng16-16      | 1.6.39-2                | 1.6.39-2+deb12u3   | https://avd.aquasec.com/nvd/cve-2026-25646 |
+| HIGH     | CVE-2026-7598  | os     | debian | libssh2-1        | 1.10.0-3+b1             |                    | https://avd.aquasec.com/nvd/cve-2026-7598  |
+| HIGH     | CVE-2025-15467 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.18-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2025-15467 |
+| HIGH     | CVE-2025-69421 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.18-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2025-69421 |
+| HIGH     | CVE-2026-28387 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28387 |
+| HIGH     | CVE-2026-28388 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28388 |
+| HIGH     | CVE-2026-28389 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28389 |
+| HIGH     | CVE-2026-28390 | os     | debian | libssl3          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28390 |
+| HIGH     | CVE-2023-52355 | os     | debian | libtiff6         | 4.5.0-6+deb12u2         |                    | https://avd.aquasec.com/nvd/cve-2023-52355 |
+| HIGH     | CVE-2025-9900  | os     | debian | libtiff6         | 4.5.0-6+deb12u2         | 4.5.0-6+deb12u3    | https://avd.aquasec.com/nvd/cve-2025-9900  |
+| HIGH     | CVE-2026-4775  | os     | debian | libtiff6         | 4.5.0-6+deb12u2         | 4.5.0-6+deb12u4    | https://avd.aquasec.com/nvd/cve-2026-4775  |
+| HIGH     | CVE-2025-69720 | os     | debian | libtinfo6        | 6.4-4                   |                    | https://avd.aquasec.com/nvd/cve-2025-69720 |
+| HIGH     | CVE-2026-6732  | os     | debian | libxml2          | 2.9.14+dfsg-1.3~deb12u2 |                    | https://avd.aquasec.com/nvd/cve-2026-6732  |
+| HIGH     | CVE-2025-7424  | os     | debian | libxslt1.1       | 1.1.35-1+deb12u1        | 1.1.35-1+deb12u2   | https://avd.aquasec.com/nvd/cve-2025-7424  |
+| HIGH     | CVE-2025-69720 | os     | debian | ncurses-base     | 6.4-4                   |                    | https://avd.aquasec.com/nvd/cve-2025-69720 |
+| HIGH     | CVE-2025-69720 | os     | debian | ncurses-bin      | 6.4-4                   |                    | https://avd.aquasec.com/nvd/cve-2025-69720 |
+| HIGH     | CVE-2026-9256  | os     | debian | nginx            | 1.29.0-1~bookworm       |                    | https://avd.aquasec.com/nvd/cve-2026-9256  |
+| HIGH     | CVE-2025-15467 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.18-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2025-15467 |
+| HIGH     | CVE-2025-69421 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.18-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2025-69421 |
+| HIGH     | CVE-2026-28387 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28387 |
+| HIGH     | CVE-2026-28388 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28388 |
+| HIGH     | CVE-2026-28389 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28389 |
+| HIGH     | CVE-2026-28390 | os     | debian | openssl          | 3.0.17-1~deb12u2        | 3.0.19-1~deb12u2   | https://avd.aquasec.com/nvd/cve-2026-28390 |
+| HIGH     | CVE-2023-31484 | os     | debian | perl-base        | 5.36.0-7+deb12u2        | 5.36.0-7+deb12u3   | https://avd.aquasec.com/nvd/cve-2023-31484 |
++----------+----------------+--------+--------+------------------+-------------------------+--------------------+--------------------------------------------+
+</details>
+
