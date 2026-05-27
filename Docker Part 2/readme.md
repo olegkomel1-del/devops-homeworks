@@ -359,6 +359,8 @@ docker build -f Dockerfile.python -t my-python-app:latest .
 ### Скриншот тестирования сборки
 ![Скриншот тестирования сборки](https://github.com/user-attachments/assets/867c5032-5334-40b4-8861-9253facae0f1)
 
+# Запуск web-приложения без использования docker, с помощью venv.
+
 ## 4. Ошибка несовместимости инструкций процессора (Архитектурный сбой СУБД)  
 Изначально была предпринята попытка запустить оригинальный образ mysql:8.0:  
 
@@ -372,5 +374,176 @@ docker run -d \
   -e MYSQL_PASSWORD="QwErTy1234" \
   mysql:8.0
 ```
+
+Результат: Контейнер аварийно завершал работу сразу после старта. Проверка логов выявила критическую ошибку:
+
+```text
+oleg@test-serv:~$ docker logs mysql-db
+Fatal glibc error: CPU does not support x86-64-v2
+```
+
+Причина: Официальный образ MySQL 8.0 скомпилирован с жестким требованием к инструкциям процессора x86-64-v2. Текущая конфигурация виртуальной машины VirtualBox не транслировала данные инструкции в гостевую ОС Ubuntu.  
+
+Решение: Контейнер был принудительно удален. Вместо него был развернут полностью совместимый, стабильный и эквивалентный по функционалу официальный образ mariadb:10.11, успешно работающий без требований к инструкциям v2:  
+
+```bash
+docker run -d \
+  --name mysql-db \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD="YtReWq4321" \
+  -e MYSQL_DATABASE="virtd" \
+  -e MYSQL_USER="app" \
+  -e MYSQL_PASSWORD="QwErTy1234" \
+  mariadb:10.11
+```
+
+### Развертывание локальной среды Python и запуск сервера  
+
+```bash
+sudo apt update && sudo apt install -y python3-venv
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+После успешной установки пакетов осуществлен запуск веб-сервера автоматизации Uvicorn:  
+
+```bash
+uvicorn main:app --host 0.0.0.0 --port 5000
+```
+
+### Диагностика ошибки аутентификации Access denied  
+При старте веб-сервер Uvicorn выдал системную ошибку подключения к СУБД:
+
+```text
+Приложение запускается...
+Ошибка при создании таблицы: 1045 (28000): Access denied for user 'app'@'172.17.0.1' (using password: YES)
+```
+![Uvicorn выдал системную ошибку подключения к СУБД](https://github.com/user-attachments/assets/a6d06d8f-a585-41bd-bf75-abc4f4f7e471)
+
+### Этап отладки 1. Проверка внутренней структуры СУБД  
+Для проверки корректности создания пользователя и базы данных была выполнена прямая инспекция таблиц внутри контейнера:  
+
+```bash
+oleg@test-serv:~/shvirtd-example-python$ docker exec -it mysql-db mariadb -u root -pYtReWq4321 -e "SHOW DATABASES; SELECT User, Host FROM mysql.user;"
+```
+
+Результат инспекции:
+
+```text
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| virtd              |
++--------------------+
++-------------+-----------+
+| User        | Host      |
++-------------+-----------+
+| app         | %         |
+| root        | %         |
+| healthcheck | 127.0.0.1 |
+| healthcheck | ::1       |
+| healthcheck | localhost |
+| mariadb.sys | localhost |
+| root        | localhost |
++-------------+-----------+
+```
+
+![Результат инспекции](https://github.com/user-attachments/assets/e100793c-fddb-47d1-9341-1dcaa20559ad)
+
+Запрос подтвердил, что база virtd существует, а пользователь app создан с хостом % (доступ открыт для любых внешних IP, включая шлюз Docker 172.17.0.1). Прямая проверка подключения внутри контейнера под пользователем app прошла успешно и без ошибок:  
+
+```bash
+oleg@test-serv:~/shvirtd-example-python$ docker exec -it mysql-db mariadb -u app -pQwErTy1234 -D virtd -e "SHOW TABLES;"
+```
+
+### Этап отладки 2. Инженерный анализ проблемы кавычек через Python  
+Чтобы понять, почему СУБД отвергает запросы от внешнего Python-процесса, был написан и запущен диагностический скрипт test_env.py, считывающий данные из .env точно так же, как это делает библиотека приложения
+
+```bash
+oleg@test-serv:~/shvirtd-example-python$ python3 test_env.py
+```
+Вывод скрипта:
+
+```text
+=== Проверка переменных окружения из Python ===
+Файл .env найден. Содержимое переменных в памяти:
+Ключ: MYSQL_ROOT_PASSWORD  -> Значение: "YtReWq4321"    (Длина: 12 симв.)
+Ключ: MYSQL_DATABASE       -> Значение: "virtd"         (Длина: 7 симв.)
+Ключ: MYSQL_USER           -> Значение: "app"           (Длина: 5 симв.)
+Ключ: MYSQL_PASSWORD       -> Значение: "QwErTy1234"    (Длина: 12 симв.)
+```
+![Проверка переменных окружения из Python](https://github.com/user-attachments/assets/f42bd58c-ead3-4331-a70f-771f6e72607e)
+
+Обнаруженная скрытая причина: Скрипт наглядно показал, что встроенный парсер Python считывает строковые значения из оригинального .env файла вместе с символами кавычек ". В итоге чистый логин app (3 символа) превратился в строку "app" (5 символов), а пароль QwErTy1234 превратился в "QwErTy1234" (12 символов). СУБД правомерно отклоняла сессию из-за несовпадения паролей.  
+
+## 5. Решение задачи со звёздочкой (*) через автоматизированный Bash-скрипт  
+Так как ручная модификация файлов проекта строго запрещена условиями ДЗ, логика динамического управления таблицей и автоматического исправления кавычек из .env была вынесена в обязательный к добавлению bash-скрипт.  
+
+### Исходный код разработанного файла run_app.sh
+
+```text
+#!/bin/bash
+
+# Определяем имя таблицы из ENV или ставим дефолтное
+TARGET_TABLE=${TABLE_NAME:-requests}
+
+echo "=== Запуск приложения с очисткой кавычек из ENV ==="
+echo "Целевое имя таблицы: $TARGET_TABLE"
+
+# 1. Создаем временную копию оригинального main.py для работы под капотом
+cp main.py main_patched.py
+
+# Подставляем РЕАЛЬНОЕ значение переменной TARGET_TABLE прямо в код Python на лету
+sed -i "s/'requests'/'$TARGET_TABLE'/g" main_patched.py
+sed -i "s/\"requests\"/\"$TARGET_TABLE\"/g" main_patched.py
+
+# 2. Вытягиваем данные из .env, СТИРАЕМ кавычки и экспортируем в приоритетные переменные процесса
+if [ -f .env ]; then
+    export DB_HOST="127.0.0.1"
+    export DB_PORT="3306"
+    export DB_USER=$(grep "MYSQL_USER" .env | cut -d'=' -f2 | tr -d '"' | tr -d "'")
+    export DB_PASSWORD=$(grep "MYSQL_PASSWORD" .env | cut -d'=' -f2 | tr -d '"' | tr -d "'")
+    export DB_NAME=$(grep "MYSQL_DATABASE" .env | cut -d'=' -f2 | tr -d '"' | tr -d "'")
+fi
+
+# 3. Функция очистки (Ctrl+C): бесследно удаляет временный файл патча при выходе
+cleanup() {
+    echo -e "\n=== Остановка сервера и очистка временных файлов ==="
+    rm -f main_patched.py
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
+
+# 4. Запускаем Uvicorn через модифицированный временный файл
+TABLE_NAME="$TARGET_TABLE" uvicorn main_patched:app --host 0.0.0.0 --port 5000
+```
+### Тестирование запуска скрипта с передачей переменной таблицы
+
+```bash
+(venv) oleg@test-serv:~/shvirtd-example-python$ TABLE_NAME="oleg_super_table" ./run_app.sh
+```
+### Лог успешного выполнения программы:
+
+```text
+===       ENV ===
+  : oleg_super_table
+INFO:     Started server process [12221]
+INFO:     Waiting for application startup.
+Приложение запускается...
+Соединение с БД установлено и таблица 'oleg_super_table' готова к работе.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0 (Press CTRL+C to quit)
+```
+![Лог успешного выполнения программы](https://github.com/user-attachments/assets/33f3d599-4e7e-491f-b542-be31b2653d6d)
+![web](https://github.com/user-attachments/assets/82435c1d-df9f-46a3-bef9-4313c03b8f90)
+
+### Заключение по отчёту:
+Все требования технического задания выполнены. Оригинальные файлы репозитория сохранены в первозданном виде. Написанный bash-скрипт успешно очистил строки от кавычек в памяти процесса, установил стабильное соединение с БД и динамически переименовал целевую таблицу в 'oleg_super_table'.
 
 </details>
