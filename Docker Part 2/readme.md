@@ -359,4 +359,18 @@ docker build -f Dockerfile.python -t my-python-app:latest .
 ### Скриншот тестирования сборки
 ![Скриншот тестирования сборки](https://github.com/user-attachments/assets/867c5032-5334-40b4-8861-9253facae0f1)
 
+## 4. Ошибка несовместимости инструкций процессора (Архитектурный сбой СУБД)  
+Изначально была предпринята попытка запустить оригинальный образ mysql:8.0:  
+
+```bash
+docker run -d \
+  --name mysql-db \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD="YtReWq4321" \
+  -e MYSQL_DATABASE="virtd" \
+  -e MYSQL_USER="app" \
+  -e MYSQL_PASSWORD="QwErTy1234" \
+  mysql:8.0
+```
+
 </details>
