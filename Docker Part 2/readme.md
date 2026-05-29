@@ -651,3 +651,27 @@ vulnerabilities:
 &emsp;&emsp;Требование к x86-64-v2: Начиная с версии MySQL 8.0.26+, официальные сборки и Docker-образы компилируются с жестким требованием к поддержке процессором инструкций уровня x86-64-v2 (включая SSE3, SSSE3, SSE4.1, SSE4.2 и POPCNT).
 
 </details>
+
+<details>
+  
+<summary>
+  
+# Задание 4
+
+</summary>    
+
+## Проверка сервиса
+
+![Проверка сервиса](https://github.com/user-attachments/assets/c6dee86a-5a75-454d-8947-39b2a2b289dd)
+
+## Пункт 5. Список контекстов и результат удаленного выполнения docker ps -a
+
+![Пункт 5](https://github.com/user-attachments/assets/5787ccb6-e4f9-4ac3-b8eb-a14334400a07)
+
+## SQL-запрос на сервере и ссылка на fork
+
+![SQL-запрос на сервере](https://github.com/user-attachments/assets/bc581cca-a1d4-460c-9baf-2ea14ff2731d)
+
+![Ссылка на fork](https://github.com/olegkomel1-del/shvirtd-example-python)
+
+</details>
