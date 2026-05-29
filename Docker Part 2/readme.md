@@ -660,6 +660,41 @@ vulnerabilities:
 
 </summary>    
 
+## Bash script
+
+```bash
+set -e
+if ! command -v docker &> /dev/null; then
+    echo "Installing Docker..."
+    sudo apt-get update
+    sudo apt-get install -y ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings    
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc]     https://download.docker.com/linux/ubuntu \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo usermod -aG docker $USER
+    echo "Docker installed. Please restart script or relogin if group privileges fail."
+fi
+REPO_DIR="/opt/devops-project"
+GIT_REPO="https://github.com/olegkomel1-del/shvirtd-example-python"
+if [ ! -d "$REPO_DIR" ]; then
+    git clone "$GIT_REPO" "$REPO_DIR"
+else
+    cd "$REPO_DIR" && git pull
+fi
+cd "$REPO_DIR"
+if [ ! -f ".env" ]; then
+    echo "ВНИМАНИЕ: Создайте файл .env в $REPO_DIR перед запуском!"
+    exit 1
+fi
+sudo docker compose up -d
+echo "Deployment successful!"
+```
+
 ## Проверка сервиса
 
 ![Проверка сервиса](https://github.com/user-attachments/assets/c6dee86a-5a75-454d-8947-39b2a2b289dd)
