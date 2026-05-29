@@ -710,3 +710,63 @@ echo "Deployment successful!"
 ![Ссылка на fork](https://github.com/olegkomel1-del/shvirtd-example-python)
 
 </details>
+
+<details>
+  
+<summary>
+  
+# Задание 5
+
+</summary>    
+
+## Bash script
+
+```bash
+set -e
+. /opt/backup/.backup.env
+NET_NAME=$(sudo docker network ls --filter name=backend --format "{{.Name}}")
+
+sudo docker run --rm \
+  --network "$NET_NAME" \
+  -v /opt/backup:/backup \
+  mariadb:10.11 \
+  sh -c 'mysqldump -h db -u"'$DB_USER'" -p"'$DB_PASSWORD'" "'$DB_NAME'" > /backup/backup_$(date +%Y%m%d_%H%M%S).sql'
+  
+sudo find /opt/backup/ -name "backup_*.sql" -mmin +15 -delete
+```
+## Cron task
+
+```text
+
+# Edit this file to introduce tasks to be run by cron.
+#
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+#
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+#
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+#
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+#
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#
+# For more information see the manual pages of crontab(5) and cron(8)
+#
+# m h  dom mon dow   command
+
+* * * * * /opt/backup/make_backup.sh >> /opt/backup/cron_backup.log 2>&1
+```
+
+## Скриншот с несколькими резервными копиями в "/opt/backup"
+
+![Скриншот с несколькими резервными копиями](https://github.com/user-attachments/assets/1e26bc80-b963-45c9-87dc-2ebbb102b56a)
+
+</details>
