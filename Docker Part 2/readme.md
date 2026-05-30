@@ -1,4 +1,4 @@
-[44.bmp](https://github.com/user-attachments/files/28417427/44.bmp)<details>
+<details>
   
 <summary>
   
