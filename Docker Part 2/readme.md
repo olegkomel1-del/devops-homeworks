@@ -1,4 +1,4 @@
-<details>
+[44.bmp](https://github.com/user-attachments/files/28417427/44.bmp)<details>
   
 <summary>
   
@@ -770,3 +770,199 @@ sudo find /opt/backup/ -name "backup_*.sql" -mmin +15 -delete
 ![Скриншот с несколькими резервными копиями](https://github.com/user-attachments/assets/1e26bc80-b963-45c9-87dc-2ebbb102b56a)
 
 </details>
+
+<details>
+  
+<summary>
+  
+# Задание 6.1
+
+</summary>    
+
+## Скачиваем hashicorp/terraform:latest и устанавливаем dive
+
+### Ввод:
+
+```bash
+docker pull hashicorp/terraform:latest
+```
+
+### Вывод:
+
+```text
+Status: Downloaded newer image for hashicorp/terraform:latest
+docker.io/hashicorp/terraform:latest
+```
+
+### Ввод:
+
+```bash
+sudo snap install dive
+```
+
+### Вывод:
+
+```text
+dive 0.12.0 from Guillaume Belanger (gruyaume) installed
+```
+
+## Запускаем dive внутри docker
+
+### Ввод:
+
+```bash
+docker run --rm -it \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  wagoodman/dive:latest hashicorp/terraform:latest
+```
+### Вывод:
+
+```text
+Unable to find image 'wagoodman/dive:latest' locally
+latest: Pulling from wagoodman/dive
+738ad4236e29: Pull complete
+f18232174bc9: Pull complete
+c27d2562e825: Pull complete
+Digest: sha256:f1886e6c32c094fc41a623c1989f5cb3e48aa766da5f0be233f911fc1d85ce10
+Status: Downloaded newer image for wagoodman/dive:latest
+Image Source: docker://hashicorp/terraform:latest
+Extracting image from docker-engine... (this can take a while for large images)
+The image is not available locally. Trying to pull 'hashicorp/terraform:latest'...
+latest: Pulling from hashicorp/terraform
+7883237053cd: Pull complete
+76cbedd71a05: Pull complete
+c0c6273f980d: Pull complete
+07139243267f: Pull complete
+Digest: sha256:15bf5a08b1fb9c9747c8ff01098aeeefb4aec9a6c24eb13e7661bdf9447e4aee
+Status: Downloaded newer image for hashicorp/terraform:latest
+docker.io/hashicorp/terraform:latest
+Analyzing image...
+Building cache...
+```
+## Скринщот найденного файла terraform в dive
+
+![terraform в dive][44.bmp](https://github.com/user-attachments/files/28417417/44.bmp)
+
+## Сохраняем образ hashicorp/terraform:latest в архив, создаемм директорию tf_extract и разархивируем в неё образ, ищем файл terraform
+
+### Ввод:
+
+```bash
+docker save hashicorp/terraform:latest -o terraform_image.tar
+mkdir tf_extract && tar -xf terraform_image.tar -C tf_extract
+find tf_extract/ -name "terraform"
+```
+(Вывод отсутствует так как файлы храняться в хэшированном виде)
+
+## Прходим к хэшированным файлам, проверяем какие файлы есть и сколько они весят
+
+### Ввод:
+```bash
+oleg@test-serv:~/tf_extract/blobs$ cd sha256/
+oleg@test-serv:~/tf_extract/blobs/sha256$ ls -la
+```
+
+### Вывод:
+
+```text
+total 49180
+drwxr-xr-x 2 oleg oleg     4096 янв  1  1970 .
+drwxr-xr-x 3 oleg oleg     4096 янв  1  1970 ..
+-r--r--r-- 1 oleg oleg     2089 янв  1  1970 07139243267faf1a5ff67fa751f2db5359e1d2250c992832d30b5c432e9b1e97
+-r--r--r-- 1 oleg oleg     1176 янв  1  1970 15bf5a08b1fb9c9747c8ff01098aeeefb4aec9a6c24eb13e7661bdf9447e4aee
+-r--r--r-- 1 oleg oleg  3981862 янв  1  1970 76cbedd71a05bf6e8513645fbf8bf436d911348bb3f027280fb28a7476ed12d0
+-r--r--r-- 1 oleg oleg 36499578 янв  1  1970 7883237053cdad4bbd2ae1666f6d1477586e7302bff0a74f5e1906caa10b43d6
+-r--r--r-- 1 oleg oleg     4290 янв  1  1970 7f1c89c4a652f3e53fad373f673d6d9e0e2bbc861a63cccc2cf5b9b962a8ddc2
+-r--r--r-- 1 oleg oleg  9841894 янв  1  1970 c0c6273f980d2ebff48cd4fa9a671a6e061d8a7dda3e1552fbf4284ab9174bb4
+-r--r--r-- 1 oleg oleg      918 янв  1  1970 c72fd09818732a1ed9e7093353d0b805dbc9090518bbcae2cbeec13ce28b82d8
+```
+
+## Находим файл с наибольшим весом (скорее всего файл terraform в нем), разархивируем его в каталог layer_content
+
+### Ввод:
+
+```bash
+oleg@test-serv:~/tf_extract/blobs/sha256$ mkdir layer_content
+oleg@test-serv:~/tf_extract/blobs/sha256$ tar -xf 7883237053cdad4bbd2ae1666f6d1477586e7302bff0a74f5e1906caa10b43d6 -C layer_content/
+oleg@test-serv:~/tf_extract/blobs/sha256$ cd layer_content/
+oleg@test-serv:~/tf_extract/blobs/sha256/layer_content$ cd bin
+oleg@test-serv:~/tf_extract/blobs/sha256/layer_content/bin$ ls -la
+```
+
+### Вывод:
+
+```text
+total 114368
+drwxr-xr-x 2 oleg oleg      4096 мая 27 12:33 .
+drwxrwxr-x 3 oleg oleg      4096 мая 30 06:18 ..
+-rwxr-xr-x 1 oleg oleg 117100728 мая 27 12:28 terraform
+```
+
+## Копируем файл terraform в домашний каталог terraform_save, меняем прова доступа terraform_save, проверяем версию 
+
+### Ввод:
+
+```bash
+oleg@test-serv:~/tf_extract/blobs/sha256/layer_content/bin$ cp terraform ~/terraform_save
+oleg@test-serv:~/tf_extract/blobs/sha256/layer_content/bin$ chmod +x ~/terraform_save
+oleg@test-serv:~/tf_extract/blobs/sha256/layer_content/bin$ ~/terraform_save --version
+```
+
+### Вывод:
+
+```text
+Terraform v1.15.5
+on linux_amd64
+```
+
+## Скриншот из консоли
+
+![Скриншот из консоли](https://github.com/user-attachments/assets/380f14bb-6305-4cbf-8c71-68c7aef82532)
+
+</details>  
+
+<details>
+  
+<summary>
+  
+# Задание 6.2
+
+</summary>    
+
+## Создание контейнера без его запуска:
+
+### Ввод:
+
+   ```bash
+   docker create --name tf_temp hashicorp/terraform:latest
+   ```
+
+## Копирование целевого файла на хост-машину:
+
+### Ввод:
+
+   ```bash
+   docker cp tf_temp:/bin/terraform ./terraform_cp
+   ```
+
+## Удаление временного контейнера и проверка версии утилиты:
+
+### Ввод:
+
+   ```bash
+   docker rm tf_temp
+   chmod +x ./terraform_cp
+   ./terraform_cp --version
+   ```
+### Вывод:
+
+```text
+Terraform v1.15.5
+on linux_amd64
+```
+
+## Скришот из консоли
+
+![Скришот из консоли](https://github.com/user-attachments/assets/8758f083-2cba-470e-b628-1c1e4b608fff)
+
+</details> 
