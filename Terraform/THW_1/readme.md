@@ -31,7 +31,7 @@ terraform -version
 ```
 
 
-> **Вывод**
+> **Вывод:**
 >```text
 >Terraform v1.5.7
 >on linux_amd64
