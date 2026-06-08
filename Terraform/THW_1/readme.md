@@ -95,14 +95,20 @@ terraform -version
 
 **Исправленный фрагмент кода в main.tf:**
 ```hcl
+
 resource "docker_image" "nginx" {
   name         = "nginx:latest"
   keep_locally = true
 }
 
 resource "docker_container" "nginx" {
-  name  = "nginx_server"
   image = docker_image.nginx.image_id
+  name  = "example_${random_password.random_string.result}"
+
+  ports {
+    internal = 80
+    external = 9090
+  }
 }
 ```
 
