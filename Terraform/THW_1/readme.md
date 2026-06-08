@@ -32,7 +32,7 @@ terraform -version
 
 
 > **Text**
-```text
-Terraform v1.5.7
-on linux_amd64
-```
+>```text
+>Terraform v1.5.7
+>on linux_amd64
+>```
