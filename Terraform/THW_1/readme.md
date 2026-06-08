@@ -84,3 +84,30 @@ terraform -version
 > }
 > ```
 
+
+### Шаг 4: Исправление закомментированных ошибок в коде
+
+Раскомментировал блок создания Docker-контейнера в файле `main.tf` и запустил команду `terraform validate`. Команда выявила следующие намеренно допущенные ошибки:
+
+1. **Отсутствие имени ресурса `docker_image`** — блок ресурса не содержал обязательного второго ярлыка (локального имени). Исправлено добавлением имени `"nginx"`.
+2. **Невалидное имя ресурса `docker_container` (`1nginx`)** — имя локального ресурса в Terraform не может начинаться с цифры. Исправлено переименованием в `"nginx"`.
+3. **Ошибочная передача образа контейнеру (`image = docker_image.nginx`)** — была попытка передать весь объект провайдера вместо конкретной строки с ID образа. Исправлено добавлением свойства `.image_id`.
+
+**Исправленный фрагмент кода в main.tf:**
+```hcl
+resource "docker_image" "nginx" {
+  name         = "nginx:latest"
+  keep_locally = true
+}
+
+resource "docker_container" "nginx" {
+  name  = "nginx_server"
+  image = docker_image.nginx.image_id
+}
+```
+
+> **Вывод команды terraform validate:**
+> ```text
+> Success! The configuration is valid.
+> ```
+
