@@ -3,13 +3,13 @@
 ### Скачиваем архив Terraform из зеркала яндекс 
 
 ```bash
-wget https://hashicorp-releases.yandexcloud.net/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+wget https://hashicorp-releases.yandexcloud.net/terraform/1.12.0/terraform_1.12.0_linux_amd64.zip
 ```
 
 ### Распоковываем архив
 
 ```bash
-unzip terraform_1.5.7_linux_amd64.zip
+unzip terraform_1.12.0_linux_amd64.zip
 ```
 
 ### Переносим файлы в глобальную директорию
@@ -21,7 +21,7 @@ sudo mv terraform /usr/local/bin/
 ### Удаляем архив
 
 ```bash
-rm terraform_1.5.7_linux_amd64.zip
+rm terraform_1.12.0_linux_amd64.zip
 ```
 
 ### Проверяем версию Terraform
@@ -33,6 +33,6 @@ terraform -version
 
 > **Вывод:**
 >```text
->Terraform v1.5.7
+>Terraform v1.12.0
 >on linux_amd64
 >```
