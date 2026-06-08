@@ -117,3 +117,14 @@ resource "docker_container" "nginx" {
 > Success! The configuration is valid.
 > ```
 
+
+### Шаг 5: Выполнение кода и проверка запущенных ресурсов
+
+Применил конфигурацию командой `terraform apply` и проверил состояние запущенных контейнеров в операционной системе.
+
+> **Вывод команды docker ps:**
+> ```text
+> CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                  NAMES
+> 076b35a71ba6   5aca99593157   "/docker-entrypoint.…"   20 seconds ago   Up 19 seconds   0.0.0.0:9090->80/tcp   example_Wm82dkYbN4uPnAAF
+> ```
+
