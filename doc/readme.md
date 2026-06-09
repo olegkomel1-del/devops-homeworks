@@ -1,5 +1,5 @@
 
-### Шаг 1: Установка интерфейса командной строки Yandex Cloud (YC CLI)
+### Установка интерфейса командной строки Yandex Cloud (YC CLI)
 
 ```bash
 curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
