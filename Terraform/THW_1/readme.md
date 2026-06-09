@@ -165,3 +165,130 @@ resource "docker_container" "nginx" {
    > *"keep_locally (Boolean) If true, then the Docker image won't be deleted on destroy operation. If this is false, it will be deleted from the local Docker registry on destroy operation."*
 
 Поскольку данный флаг активен (`true`), Terraform удалил сам запущенный контейнер, но оставил скачанный образ в локальном кэше хост-системы.
+
+## Выполнение Задания 2* (Работа с Remote Docker Context и Секретами)
+
+### Шаг 1: Настройка переменных и скрытие секретов
+
+В каталоге проекта `src` был создан секретный файл конфигурации переменных `personal.auto.tfvars`. Данный файл содержит чувствительные данные доступа к Yandex Cloud и заблокирован для утилиты Git с помощью правил `.gitignore`.
+
+**Содержимое файла personal.auto.tfvars:**
+```hcl
+yc_token     = "t1.9euel..." # Новый OAuth/IAM токен авторизации
+yc_cloud_id  = "b1g..."     # ID Облака Yandex Cloud
+yc_folder_id = "b1g8..."    # ID Каталога (Folder ID)
+```
+
+В файле `main.tf` были объявлены соответствующие входные переменные, а также настроены блоки провайдеров `yandex` и `docker` (с перенаправлением контекста на удаленную ВМ в облаке по SSH через конфигурационный файл `~/.ssh/config`):
+
+```hcl
+variable "yc_token" { type = string }
+variable "yc_cloud_id" { type = string }
+variable "yc_folder_id" { type = string }
+
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+    docker = {
+      source  = "kreuzwerker/docker"
+    }
+    random = {
+      source  = "hashicorp/random"
+    }
+  }
+  required_version = "~>1.12.0"
+}
+
+provider "yandex" {
+  token     = var.yc_token
+  cloud_id  = var.yc_cloud_id
+  folder_id = var.yc_folder_id
+  zone      = "ru-central1-a"
+}
+
+provider "docker" {
+  host = "ssh://o_komel@111.88.240.140:22"
+}
+```
+
+---
+
+### Шаг 2: Конфигурация манифеста MySQL и развертывание в Облаке
+
+В файле `main.tf` был описан манифест для генерации двух независимых случайных паролей (через `random_password`) и развертывания контейнера `mysql:8` на удаленном хосте. Имя контейнера генерируется динамически с использованием интерполяции и привязки строки root-пароля. Порт `3306` проброшен строго на локальный интерфейс ВМ (`127.0.0.1:3306`), изолируя базу данных от внешнего интернета.
+
+**Используемый блок ресурсов в main.tf:**
+```hcl
+resource "random_password" "mysql_root_password" {
+  length  = 16
+  special = false
+}
+
+resource "random_password" "mysql_user_password" {
+  length  = 16
+  special = false
+}
+
+resource "docker_image" "mysql" {
+  name = "mysql:8"
+}
+
+resource "docker_container" "mysql" {
+  image = docker_image.mysql.image_id
+  name  = "example_${random_password.mysql_root_password.result}"
+
+  ports {
+    internal = 3306
+    external = 3306
+    ip       = "127.0.0.1"
+  }
+
+  env = [
+    "MYSQL_ROOT_PASSWORD=${random_password.mysql_root_password.result}",
+    "MYSQL_DATABASE=wordpress",
+    "MYSQL_USER=wordpress",
+    "MYSQL_PASSWORD=${random_password.mysql_user_password.result}",
+    "MYSQL_ROOT_HOST=%"
+  ]
+}
+```
+
+Деплой запущен на локальной машине командой `terraform apply -auto-approve` и завершился успехом (`Apply complete!`).
+
+---
+
+### Шаг 3: Контрольная проверка запущенных ресурсов на удаленной ВМ
+
+Выполнил подключение к созданной виртуальной машине `remote-docker-host` по SSH и запросил состояние Docker-окружения.
+
+> **Вывод команды docker ps на удаленной ВМ:**
+> ```text
+> CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                 NAMES
+> edac6fedddf1   c36050afdca8   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   127.0.0.1:3306->3306/tcp, 33060/tcp   example_OG8EcsANVDfqAJCV
+> ```
+
+Провалился внутрь запущенного контейнера базы данных с помощью команды `docker exec` для валидации секретных переменных окружения.
+
+> **Вывод команды docker exec -it example_OG8EcsANVDfqAJCV env:**
+> ```text
+> PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+> HOSTNAME=edac6fedddf1
+> TERM=xterm
+> MYSQL_ROOT_HOST=%
+> MYSQL_ROOT_PASSWORD=OG8EcsANVDfqAJCV
+> MYSQL_DATABASE=wordpress
+> MYSQL_PASSWORD=scETLL60BitGoizw
+> MYSQL_USER=wordpress
+> GOSU_VERSION=1.19
+> MYSQL_MAJOR=8.4
+> MYSQL_VERSION=8.4.9-1.el9
+> MYSQL_SHELL_VERSION=8.4.9-1.el9
+> HOME=/root
+> ```
+
+**Вывод:** Тестирование подтверждает корректную работу интерполяции строк в Terraform. Контейнер успешно получил уникальное имя `example_OG8EcsANVDfqAJCV` на основе сгенерированного root-пароля. Внутри контейнера присутствуют все секретные ENV-переменные с уникальными значениями паролей, сгенерированных провайдером `random`.
+
+### Итоговый скриншот
+![Итоговый скриншот](https://github.com/user-attachments/assets/94097446-4ff1-4a99-86c8-4a696b5ef681)
