@@ -292,3 +292,74 @@ resource "docker_container" "mysql" {
 
 ### Итоговый скриншот
 ![Итоговый скриншот](https://github.com/user-attachments/assets/94097446-4ff1-4a99-86c8-4a696b5ef681)
+
+
+## Выполнение Задания 3* (Переход на OpenTofu и проверка совместимости)
+
+### Шаг 1: Установка OpenTofu
+Скачал официальный дистрибутив OpenTofu версии 1.8.8 в виде бинарного zip-архива с GitHub. Распаковал утилиту и перенес исполняемый файл в глобальную директорию `/usr/local/bin/`.
+
+> **Вывод команды tofu --version:**
+> ```text
+> OpenTofu v1.8.8
+> on linux_amd64
+> ```
+
+---
+
+### Шаг 2: Обеспечение совместимости и локальная инициализация плагинов
+При использовании OpenTofu в изолированной среде без внешнего доступа к реестрам возник конфликт нейминга: утилита искала провайдеры по умолчанию в пространстве имён `registry.opentofu.org`. 
+
+Для обеспечения совместимости в манифесте `main.tf` были явно переопределены источники (source) провайдеров на глобальный реестр `registry.terraform.io`, что позволило OpenTofu бесшовно использовать кэш, ранее скачанный утилитой Terraform:
+
+```hcl
+terraform {
+  required_providers {
+    yandex = {
+      source = "registry.terraform.io/yandex-cloud/yandex"
+    }
+    docker = {
+      source = "registry.terraform.io/kreuzwerker/docker"
+    }
+    random = {
+      source = "registry.terraform.io/hashicorp/random"
+    }
+  }
+  required_version = ">= 1.5.0"
+}
+```
+
+Инициализация выполнена локально из существующего кэша провайдеров без обращения к внешней сети с помощью флага `-plugin-dir`:
+```bash
+tofu init -plugin-dir=.terraform/providers
+```
+
+> **Вывод команды tofu init:**
+> ```text
+> Initializing the backend...
+> Initializing provider plugins...
+> OpenTofu has been successfully initialized!
+> ```
+
+---
+
+### Шаг 3: Проверка состояния инфраструктуры через OpenTofu
+Запустил применение манифестов конфигурации через OpenTofu для проверки существующего состояния ресурсов на удаленной ВМ.
+
+```bash
+tofu apply -auto-approve
+```
+
+> **Вывод команды tofu apply:**
+> ```text
+> random_password.mysql_root_password: Refreshing state... [id=none]
+> random_password.mysql_user_password: Refreshing state... [id=none]
+> docker_image.mysql: Refreshing state... [id=sha256:c36050afdca8...]
+> docker_container.mysql: Refreshing state... [id=edac6fedddf1...]
+> 
+> No changes. Infrastructure is up-to-date.
+> 
+> Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+> ```
+
+**Вывод:** Тестирование подтверждает полную бинарную, логическую и архитектурную обратную совместимость OpenTofu с существующими конфигурационными файлами формата HCL и state-файлами `terraform.tfstate`. Утилита `tofu` успешно прочитала текущую конфигурацию, подключилась к удаленному Docker-контексту по SSH-каналу и подтвердила актуальность развернутого контейнера MySQL без необходимости пересоздания ресурсов.
