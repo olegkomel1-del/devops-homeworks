@@ -1,1 +1,153 @@
+# Домашнее задание к занятию «Основы Terraform. Yandex Cloud»
+
+## Задание 1
+
+### Шаг 1: Изучил проект. Проверил какие в файле variables.tf объявлены переменные для Yandex provider.
+
+### Шаг 2: Вручную на ресурсе console.yandex.cloud создал сервисную учетную запись. Командой yc iam key create создал ключ, внес имя ключа в .gitignore.
+
+```bash
+yc iam key create --service-account-name <NAME-SERV-ACC> --output .key.json
+```
+
+### Шаг 3: Сгенерировал ssh-ключ командой ssh-keygen. 
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+```
+> **Вывод:**
+> ```text
+> Generating public/private ed25519 key pair.
+>Your identification has been saved in /home/o_komel/.ssh/id_ed25519
+>Your public key has been saved in /home/o_komel/.ssh/id_ed25519.pub
+>The key fingerprint is:
+> ....
+> ```
+
+### Создал файл terraform.tfvars, добавил в него переменную vms_ssh_public_root_key, внес файл terraform.tfvars в .gitignore.
+
+```bash
+nano terraform.tfvars
+```
+
+> **terraform.tfvars**
+> ```text
+> vms_ssh_public_root_key = "<.....>"
+> ```
+
+### Шаг 4: Инициализация проекта.
+
+При инициализации terraform init программа постоянно запрашивала ввод ИД облако и ИД папки, первое что начал менять это убрал данные запросы:  
+
+> **variables.tf**
+> ```text
+> #variable "cloud_id" {
+> #  type        = string
+> #  description = "https://cloud.yandex.ru/docs/resource-manager/operations/cloud/get-id"
+> #}
+>
+> #variable "folder_id" {
+> #  type        = string
+> #  description = "https://cloud.yandex.ru/docs/resource-manager/operations/folder/get-id"
+> #}
+> ```
+
+Я закомментировал переменные cloud_id и folder_id в коде, чтобы Terraform не запрашивал их ввод вручную. Благодаря интеграции с Yandex Cloud CLI, провайдер автоматически подтягивает ID облака и каталога из текущего активного профиля yc (настроенного ранее через yc init), а аутентификация при этом безопасно проходит через файл .key.json.
+
+Провожу вторую инициализация terraform init, вижу что теперь terraform анонсит мои переменные cloud_id и folder_id в консоль. Для того чтобы terraform скрыл мои переменные, редактирую файл providers.tf:
+
+> **providers.tf**
+> ```text
+>  cloud_id                 = sensitive("")
+>  folder_id                = sensitive("")
+> ```
+
+После использования функции sensitive() переменные пропали из вывода консоли. Команды terraform init и terraform validate выполнились успешно.
+Команда terraform apply выдала ошибку с ссылкой на 15 строку файла main.tf. Изучив файл нашёл 4 ошибки:
+
+> **Ошибки :**  
+> platform_id = "standart-v4" -> заменил на platform_id = "standard-v4"
+>  
+> cores         = 1           -> создавая виртуалки на веб ресурсе не замечал возможности выбрать одно ядро, поменял на cores         = 2
+> 
+> core_fraction = 5           -> создавая виртуалки на веб ресурсе не замечал возможности выбрать 5% гарантированной процессорной мощности, поменял на core_fraction = 20
+> 
+> ssh-keys           = "ubuntu:${var.vms_ssh_root_key}" -> из шага 3 следует что имя переменной vms_ssh_public_root_key, заменил на ssh-keys           = "ubuntu:${var.vms_ssh_public_root_key}"
+
+Вторая и третья попытка ввести команду terraform apply также приводили к ошибкам:
+
+> **Ошибки :**  
+> В файле variables.tf была объявлена переменная с старым названием vms_ssh_root_key, заменил на vms_ssh_public_root_key
+> 
+> Terraform не поддерживает платформу standard-v4 в моей зоне, заменил на standard-v3
+
+С четвертого раза команда terraform apply выолнилась успешно:
+
+> **Вывод :**  
+> ``` text
+> yandex_compute_instance.platform: Creating...
+> yandex_compute_instance.platform: Still creating... [00m10s elapsed]
+> yandex_compute_instance.platform: Still creating... [00m20s elapsed]
+> yandex_compute_instance.platform: Still creating... [00m30s elapsed]
+> yandex_compute_instance.platform: Still creating... [00m40s elapsed]
+> yandex_compute_instance.platform: Creation complete after 43s [id=fhmkr5ntl55rc24j7vco]
+>
+> Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+> ```
+
+### Шаг 5: Подключение к ВМ по ssh и выполнение команды curl ifconfig.me
+
+Добавил ключ в ssh агент:
+
+```bash
+eval $(ssh-agent) && ssh-add ~/.ssh/id_ed25519
+```
+
+Командой yc compute instance list посмотрел внешний IP адрес ВМ:
+
+```Text
++----------------------+-------------------------------+---------------+---------+--------------+-------------+
+|          ID          |             NAME              |    ZONE ID    | STATUS  | EXTERNAL IP  | INTERNAL IP |
++----------------------+-------------------------------+---------------+---------+--------------+-------------+
+| fhmkr5ntl55rc24j7vco | netology-develop-platform-web | ru-central1-a | RUNNING | 93.77.183.35 | 10.0.1.32   |
++----------------------+-------------------------------+---------------+---------+--------------+-------------+
+```
+
+Подключился к ВМ по ssh, выполнил команду curl ifconfig.me:
+
+```text
+93.77.183.35
+```
+
+### Шаг 6: 
+
+> **preemptible = true**
+> 
+> Этот параметр указывает облаку, что вы создаете «прерывистую» виртуальную машину. Облако предоставляет её из избыточных, временно свободных мощностей дата-центра.
+>
+> **Как это помогает в обучении :** Такая виртуалка стоит в разы дешевле обычной. Для тестов, развертывания домашних заданий и проверки кода Terraform вам не нужна отказоустойчивость. Если облаку потребуются ресурсы для коммерческих клиентов, вашу ВМ могут принудительно остановить, но для учёбы это не критично — вы всегда можете поднять её заново одной командой terraform apply.
+> 
+> **Ограничение :** Она работает непрерывно не более 24 часов, после чего автоматически останавливается. Для учебных сессий по 2–3 часа это идеальный вариант.
+
+> **core_fraction=5**
+>
+> Этот параметр регулирует уровень производительности процессора. Он означает, что вашей виртуалке гарантированно выделяется только 5% вычислительной мощности физического ядра CPU. Если процессору понадобятся дополнительные ресурсы для кратковременной задачи (например, для компиляции или установки пакета), облако может временно выдать до 100% мощности (burst-режим), если физический процессор в этот момент не загружен другими пользователями.
+>
+> **Как это помогает в обучении :** Во время написания кода или тестирования конфигураций виртуалка 99% времени просто "простаивает" в ожидании ваших команд. Зачем переплачивать за 100% мощности ядра, если для работы в консоли Ubuntu достаточно минимального присутствия процессора? Понижение core_fraction до 5% или 20% срезает большую часть стоимости аренды процессора.
+
+### Скриншоты к заданию 1:  
+
+> Успешное применение команды terraform apply:
+> ![1](https://github.com/user-attachments/assets/637727d2-d5b7-4058-80e7-ce71dab8cf24)
+
+> Проверка создания ВМ в console.yandex.cloud:
+> ![2](https://github.com/user-attachments/assets/755bede0-9976-4c96-919c-2a38c409e782)
+
+> Выполнение команды curl ifconfig.me:  
+> ![3](https://github.com/user-attachments/assets/868985eb-2794-4c4d-a382-8e35d2c0c9e7)
+
+
+
+
+
 
