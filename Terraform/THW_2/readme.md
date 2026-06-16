@@ -301,6 +301,7 @@ eval $(ssh-agent) && ssh-add ~/.ssh/id_ed25519
 >   network_id     = yandex_vpc_network.develop.id
 >   v4_cidr_blocks = var.default_cidr_b
 > }
+>
 > resource "yandex_compute_instance" "platform_db" {
 >   name        = var.vm_db_name
 >   platform_id = var.vm_db_platform_id
