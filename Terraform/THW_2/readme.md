@@ -235,3 +235,80 @@ eval $(ssh-agent) && ssh-add ~/.ssh/id_ed25519
 Сам рефакторинг кода на переменные выполнен корректно, хардкод убран. Чтобы избежать пересоздания ВМ на проде в реальных условиях, следовало бы временно зафиксировать старый ID через переменную или использовать lifecycle { ignore_changes = [boot_disk[0].initialize_params[0].image_id] }, но в рамках учебной задачи оставляю динамический поиск семейства, как требовалось в условиях.  
 
 Командой terraform apply принимаю изменения и пересоздаю ВМ.
+
+## Задание 3
+
+### Шаг 1: Создать файл vms_platform.tf, перенести в него переменные созданные из задания 2, на первом шаге.
+
+Перенес переменные из файла **variables.tf**  в файл **vms_platform.tf**.
+
+### Шаг 2: Объявить в файле **vms_platform.tf** переменные для второй ВМ с префиксом vm_db_, в зоне "ru-central1-b".
+
+**vms_platform.tf**  
+> ```text  
+> ...  
+> variable "vm_db_zone" {  
+>   type        = string  
+>   default     = "ru-central1-b"  
+>   description = "Target zone for DB instance"  
+> }
+>
+> variable "vm_db_name" {
+>   type    = string
+>   default = "netology-develop-platform-db"
+> }
+>
+> variable "vm_db_platform_id" {
+>   type    = string
+>   default = "standard-v3"
+> }
+>
+> variable "vm_db_cores" {
+>   type    = number
+>   default = 2
+> }
+>
+> variable "vm_db_memory" {
+>   type    = number
+>   default = 2
+> }
+>
+> variable "vm_db_core_fraction" {
+>   type    = number
+>   default = 20
+> }
+> ...
+> ```
+
+Объявил переменную **var.default_cidr_b** в файле **variables.tf**:
+
+>**variables.tf**
+>```text
+> variable "default_cidr_b" {
+>   type        = list(string)
+>   default     = ["10.0.2.0/24"]
+>   description = "https://cloud.yandex.ru/docs/vpc/operations/subnet-create"
+> }
+>```
+
+Добавил блок подсети и блок ресурсов для второй ВМ в файл **main.tf**
+
+>**main.tf**
+>```text
+> resource "yandex_vpc_subnet" "develop_b" {
+>   name           = "${var.vpc_name}-b"
+>   zone           = var.vm_db_zone
+>   network_id     = yandex_vpc_network.develop.id
+>   v4_cidr_blocks = var.default_cidr_b
+> }
+> resource "yandex_compute_instance" "platform_db" {
+>   name        = var.vm_db_name
+>   platform_id = var.vm_db_platform_id
+>   zone        = var.vm_db_zone 
+>
+>   resources {
+>     cores         = var.vm_db_cores
+>     memory        = var.vm_db_memory
+>     core_fraction = var.vm_db_core_fraction
+>   }
+>```
