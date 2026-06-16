@@ -397,7 +397,7 @@ vms_info = {
 
 ### Шаг 3: Применить изменения:
 
-> **terraform plan**
+> **terraform plan**  
 > ![1](https://github.com/user-attachments/assets/59016541-444e-41c6-88f6-d931027631ce)
 
 
