@@ -440,7 +440,7 @@ variable "vms_metadata" {
 }
 ```
 
-### Шаг 2 : Создайть и использовать отдельную map(object) переменную для блока metadata
+### Шаг 2: Создайть и использовать отдельную map(object) переменную для блока metadata
 
 > **terraform.tfvars**
 > ```text
@@ -450,6 +450,12 @@ variable "vms_metadata" {
 > }
 > ```
 
+### Шаг 3: Найти и закоментировать все, более не используемые переменные проекта
+Закоментировал все отдельные переменные в файле **vms_platform.tf**  
 
+### Шаг 4: Выполнить проверку
+
+> **terraform plan**  
+> ![2](https://github.com/user-attachments/assets/4c2b0f60-42c2-48cc-9312-144e41ea4d17)
 
 
