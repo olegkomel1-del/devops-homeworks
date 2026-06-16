@@ -146,8 +146,92 @@ eval $(ssh-agent) && ssh-add ~/.ssh/id_ed25519
 > Выполнение команды curl ifconfig.me:  
 > ![3](https://github.com/user-attachments/assets/868985eb-2794-4c4d-a382-8e35d2c0c9e7)
 
+## Задание 2
 
+### Шаг 1: Заменить все хардкод-значения на отдельные переменные.  
+Для этого анонсирую меременные в файле **variables.tf**:  
 
+> **variables.tf**
+> ```text
+> ...
+> variable "vm_web_image_family" {
+>   type        = string
+>   default     = "ubuntu-2004-lts"
+>   description = "OS image family for web VM"
+> }
+>
+>
+> variable "vm_web_name" {
+>   type        = string
+>   default     = "netology-develop-platform-web"
+>   description = "Name of the web virtual machine"
+> }
+>
+> variable "vm_web_platform_id" {
+>   type        = string
+>   default     = "standard-v3"
+>   description = "Platform ID for web VM"
+> }
+>
+> variable "vm_web_cores" {
+>   type        = number
+>   default     = 2
+>   description = "Number of CPU cores"
+> }
+>
+> variable "vm_web_memory" {
+>    type        = number
+>   default     = 1
+>   description = "RAM size in GB"
+> }
+>
+> variable "vm_web_core_fraction" {
+>   type        = number
+>   default     = 20
+>   description = "Core fraction percentage"
+> }
+> ```
 
+В файле main.tf меняю хардкод-значения на объявленные выше:
 
+> **main.tf**
+> ```text
+> ...  
+> resource "yandex_compute_instance" "platform" {  
+>   name        = var.vm_web_name         
+>   platform_id = var.vm_web_platform_id  
+>    
+>   resources {  
+>     cores         = var.vm_web_cores          
+>     memory        = var.vm_web_memory         
+>     core_fraction = var.vm_web_core_fraction  
+>   }  
+> ...
+> ```
 
+Проверяю результат командой terraform plan изменений быть не должно:
+
+> **Вывод фиксации изменения**
+> ```text
+> ...  
+>          ~ initialize_params {  
+>              ~ block_size  = 4096 -> (known after apply)  
+>              + description = (known after apply)  
+>              ~ image_id    = "fd8ucl971l0m6c5o8179" -> "fd8og910erljic63i7ln" # forces replacement  
+>              + name        = (known after apply)  
+>              ~ size        = 5 -> (known after apply)  
+>              + snapshot_id = (known after apply)  
+>                # (2 unchanged attributes hidden)  
+>            }  
+>        }  
+> ...
+> ```
+> 
+
+При проверке terraform plan после рефакторинга утилита показала деструктивное изменение (замену ВМ из-за изменения image_id).  
+
+**Причина:** источник данных data "yandex_compute_image" "ubuntu" с параметром family = "ubuntu-2004-lts" динамически подтянул свежий ID образа, так как Yandex Cloud обновил базовый образ в своем репозитории.  
+
+Сам рефакторинг кода на переменные выполнен корректно, хардкод убран. Чтобы избежать пересоздания ВМ на проде в реальных условиях, следовало бы временно зафиксировать старый ID через переменную или использовать lifecycle { ignore_changes = [boot_disk[0].initialize_params[0].image_id] }, но в рамках учебной задачи оставляю динамический поиск семейства, как требовалось в условиях.  
+
+Командой terraform apply принимаю изменения и пересоздаю ВМ.
