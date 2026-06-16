@@ -400,4 +400,56 @@ vms_info = {
 > **terraform plan**  
 > ![1](https://github.com/user-attachments/assets/59016541-444e-41c6-88f6-d931027631ce)
 
+## Задание 6
+
+### Шаг 1: Объединить отдельные переменные в единую map-переменную vms_resources 
+
+Переопределяю переменные в файле **vms_platform.tf**
+```text
+variable "vms_resources" {
+  type = map(object({
+    image_family  = string
+    platform_id   = string
+    cores         = number
+    memory        = number
+    core_fraction = number
+  }))
+  default = {
+    web = {
+      image_family  = "ubuntu-2004-lts"
+      platform_id   = "standard-v3"
+      cores         = 2
+      memory        = 2
+      core_fraction = 20
+    }
+    db = {
+      image_family  = "ubuntu-2004-lts"
+      platform_id   = "standard-v3"
+      cores         = 2
+      memory        = 2
+      core_fraction = 20
+    }
+  }
+}
+variable "vms_metadata" {
+  type = map(string)
+  default = {
+    serial-port-enable = "1"
+    ssh-keys           = "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5 ... sedser/jIqn7ulu7EvYsHAYqsvzPG o_komel@kms-test"
+  }
+}
+```
+
+### Шаг 2 : Создайть и использовать отдельную map(object) переменную для блока metadata
+
+> **terraform.tfvars**
+> ```text
+>  vms_metadata = {
+>   serial-port-enable = "1"
+>   ssh-keys           = "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILJzy ... r/jIqn7ulu7EvYsHAYqsvzPG o_komel@kms-test"
+> }
+> ```
+
+
+
 
