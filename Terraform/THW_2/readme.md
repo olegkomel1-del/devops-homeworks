@@ -458,4 +458,33 @@ variable "vms_metadata" {
 > **terraform plan**  
 > ![2](https://github.com/user-attachments/assets/4c2b0f60-42c2-48cc-9312-144e41ea4d17)
 
+## Задание 7
+
+### Шаг 1:  
+
+> **local.test_list[1]**
+> ```text
+> "staging"
+> ```
+
+### Шаг 2:  
+
+> **length(local.test_list)**
+> ```text
+> 3
+> ```
+
+### Шаг 3:
+
+> **local.test_map["admin"]**
+> ```text
+> "John"
+> ```
+
+### Шаг 4:
+
+> **"${local.test_map["admin"]} is ${keys(local.test_map)[0]} for production server based on OS ${local.servers["production"].image} with ${local.servers["production"].cpu} vcpu, ${local.servers["production"].ram} ram and ${length(local.servers["production"].disks)} virtual disks"**
+> ```text
+> "John is admin for production server based on OS ubuntu-20-04 with 10 vcpu, 40 ram and 4 virtual disks"
+> ```
 
