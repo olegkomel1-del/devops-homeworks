@@ -313,3 +313,16 @@ eval $(ssh-agent) && ssh-add ~/.ssh/id_ed25519
 >     core_fraction = var.vm_db_core_fraction
 >   }
 >```
+
+### Шаг 3: Применить изменения
+
+Приеняю изменения командами terraform validate, terraform  plan, terraform apply. Проверяю создание второй ВМ командой **yc compute instance list**:
+
+```text
++----------------------+-------------------------------+---------------+---------+---------------+-------------+
+|          ID          |             NAME              |    ZONE ID    | STATUS  |  EXTERNAL IP  | INTERNAL IP |
++----------------------+-------------------------------+---------------+---------+---------------+-------------+
+| epddt9rnfnvi7nslmiin | netology-develop-platform-db  | ru-central1-b | RUNNING | 51.250.22.210 | 10.0.2.21   |
+| fhmr16i7s16hsuv7eok4 | netology-develop-platform-web | ru-central1-a | RUNNING | 89.169.159.36 | 10.0.1.7    |
++----------------------+-------------------------------+---------------+---------+---------------+-------------+
+```
