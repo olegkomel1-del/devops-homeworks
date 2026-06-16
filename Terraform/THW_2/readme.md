@@ -326,3 +326,47 @@ eval $(ssh-agent) && ssh-add ~/.ssh/id_ed25519
 | fhmr16i7s16hsuv7eok4 | netology-develop-platform-web | ru-central1-a | RUNNING | 89.169.159.36 | 10.0.1.7    |
 +----------------------+-------------------------------+---------------+---------+---------------+-------------+
 ```
+
+## Задание 4  
+
+### Шаг 1: Объявить в файле outputs.tf один output , содержащий: instance_name, external_ip, fqdn для каждой из ВМ:
+
+>**outputs.tf**
+>```text
+> output "vms_info" {
+>   description = "Information about deployed virtual machines"
+>   value = {
+>     web_server = {
+>       instance_name = yandex_compute_instance.platform.name
+>       external_ip   = yandex_compute_instance.platform.network_interface[0].nat_ip_address
+>       fqdn          = yandex_compute_instance.platform.fqdn
+>     }
+>     db_server = {
+>       instance_name = yandex_compute_instance.platform_db.name
+>       external_ip   = yandex_compute_instance.platform_db.network_interface[0].nat_ip_address
+>       fqdn          = yandex_compute_instance.platform_db.fqdn
+>     }
+>   }
+> }
+>```
+
+### Шаг 2: Применить изменения
+
+Обновляю состояние без применнения изменений к основным ресрусам командой terraform apply -refresh-only, вывожу output командой **terraform output**:
+
+```text
+vms_info = {
+  "db_server" = {
+    "external_ip" = "51.250.22.210"
+    "fqdn" = "epddt9rnfnvi7nslmiin.auto.internal"
+    "instance_name" = "netology-develop-platform-db"
+  }
+  "web_server" = {
+    "external_ip" = "89.169.159.36"
+    "fqdn" = "fhmr16i7s16hsuv7eok4.auto.internal"
+    "instance_name" = "netology-develop-platform-web"
+  }
+}
+```
+
+
