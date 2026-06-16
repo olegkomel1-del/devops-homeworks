@@ -369,4 +369,29 @@ vms_info = {
 }
 ```
 
+## Задание 5
+
+### Шаг 1: В файле locals.tf описать в одном local-блоке имя каждой ВМ, использовать интерполяцию:
+
+>**locals.tf**
+>```text
+> locals {
+>   project = "netology"
+>   env     = "develop"
+>
+>   vm_web_name = "${local.project}-${local.env}-platform-web"
+>   vm_db_name  = "${local.project}-${local.env}-platform-db"
+> }
+>```
+
+### Шаг 2: Заменить переменные внутри ресурса ВМ на созданные вами local-переменные.
+
+>**main.tf**
+>```text
+> ...
+> name        = local.vm_web_name
+> ...
+> name        = local.vm_db_name
+> ...
+>```
 
