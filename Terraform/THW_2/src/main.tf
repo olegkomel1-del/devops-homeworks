@@ -1,16 +1,4 @@
-# Local .terraform directories and files
-**/.terraform/*
-.terraform*
 
-!.terraformrc
-
-# .tfstate files
-*.tfstate
-*.tfstate.*
-
-# own secret vars store.
-personal.auto.tfvarskey.json
-.key.json
 terraform.tfvarsresource "yandex_vpc_network" "develop" {
   name = var.vpc_name
 }
