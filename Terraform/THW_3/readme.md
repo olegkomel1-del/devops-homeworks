@@ -143,3 +143,74 @@ terraform apply -auto-approve
 > 
 > ![2](https://github.com/user-attachments/assets/ac8411d3-1793-46ad-a48d-feb438f94dd5)
 
+## Задание 3
+
+### Шаг 1: Создал файл disk_vm.tf. Описал в нём создание 3 одинаковых виртуальных дисков размером 1 Гб с помощью ресурса yandex_compute_disk и цикла count. Имена дисков параметризировал через count.index.
+
+```bash
+nano disk_vm.tf
+```
+
+### Шаг 2: В этом же файле описал одиночную ВМ "storage". Для подключения созданных дисков использовал динамический блок dynamic "secondary_disk", который с помощью встроенного цикла for_each перебирает список созданных дисков и автоматически забирает их disk_id.
+
+> **disk_vm.tf**
+> ```hcl
+> resource "yandex_compute_disk" "storage_disks" {
+>   count = 3
+>   name  = "storage-disk-${count.index + 1}"
+>   zone  = var.default_zone
+>   size  = 1
+> }
+> 
+> resource "yandex_compute_instance" "storage_vm" {
+>   name        = "storage"
+>   platform_id = var.vms_resources.web.platform_id
+> 
+>   resources {
+>     cores         = 2
+>     memory        = 2
+>     core_fraction = 20
+>   }
+> 
+>   boot_disk {
+>     initialize_params {
+>       image_id = data.yandex_compute_image.ubuntu.id
+>       size     = 10
+>     }
+>   }
+> 
+>   dynamic "secondary_disk" {
+>     for_each = yandex_compute_disk.storage_disks
+>     content {
+>       disk_id = secondary_disk.value.id
+>     }
+>   }
+> 
+>   network_interface {
+>     subnet_id = yandex_vpc_subnet.develop.id
+>     nat       = true
+>   }
+> 
+>   metadata = merge(var.vms_metadata, {
+>     ssh-keys = local.ssh_key
+>   })
+> }
+> ```
+
+### Шаг 3: Проверил конфигурацию и применил изменения.
+
+```bash
+terraform validate
+terraform apply -auto-approve
+```
+
+> **Вывод terraform validate:**
+> ```text
+> Success! The configuration is valid.
+> Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+> ```
+
+> **Скриншот из console.yandex.cloud**:  
+> 
+> ![3](https://github.com/user-attachments/assets/77c0e4ea-6563-4b10-b413-25ebfa8eb45f)
+
