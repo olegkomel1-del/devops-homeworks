@@ -136,5 +136,10 @@ terraform apply -auto-approve
 > **Вывод terraform validate:**
 > ```text
 > Success! The configuration is valid.
+> Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
 > ```
+
+> **Скриншот из console.yandex.cloud**:  
+> 
+> ![2](https://github.com/user-attachments/assets/ac8411d3-1793-46ad-a48d-feb438f94dd5)
 
