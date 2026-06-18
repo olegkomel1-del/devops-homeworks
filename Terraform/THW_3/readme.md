@@ -367,3 +367,126 @@ terraform output all_vms_info
 > ![4](https://github.com/user-attachments/assets/4c12e074-04d8-45db-9b9b-3c7515e852c9)
 
 
+## Задание 6* (Необязательное)
+
+### Шаг 1: Обновил индекс пакетов и установил утилиту Ansible в систему, чтобы у Terraform была возможность вызывать сценарии локально.
+
+```bash
+sudo apt update && sudo apt install -y ansible
+```
+
+### Шаг 2: Модифицировал файл ansible.tf. Добавил в него ресурс null_resource и provisioner "local-exec" для автоматического запуска ansible-playbook после генерации инвентаря. Для предотвращения падения Терраформа из-за сетевой недоступности изолированных ВМ добавил флаг on_failure = continue.
+
+```bash
+nano ansible.tf
+```
+
+> **Обновленный ansible.tf**
+> ```hcl
+> resource "local_file" "hosts_cfg" {
+>   filename = "${path.module}/hosts.cfg"
+> 
+>   content = templatefile("${path.module}/hosts.tpl", {
+>     webservers = yandex_compute_instance.web_vm
+>     databases  = values(yandex_compute_instance.db_vm)
+>     storage    = [yandex_compute_instance.storage_vm]
+>   })
+> }
+> 
+> resource "null_resource" "web_hosts_provision" {
+>   depends_on = [local_file.hosts_cfg]
+>   triggers = {
+>     policy_tf = join(",", [for v in yandex_compute_instance.web_vm : v.network_interface.0.ip_address])
+>   }
+>   provisioner "local-exec" {
+>     command    = "sleep 30 && ansible-playbook -i ${local_file.hosts_cfg.filename} ${path.module}/test.yml"
+>     on_failure = continue
+>   }
+> }
+> ```
+
+### Шаг 3: Перешёл в файлы count-vm.tf, for_each-vm.tf и disk_vm.tf, где в блоках конфигурации сетевых интерфейсов network_interface отключил внешние IP-адреса, переведя параметр в nat=false.
+
+```bash
+# В файлах count-vm.tf, for_each-vm.tf, disk_vm.tf:
+network_interface {
+  subnet_id = yandex_vpc_subnet.develop.id
+  nat       = false
+}
+```
+
+### Шаг 4: Модифицировал файл outputs.tf, чтобы контролировать назначение приватных адресов внутри изолированной сети. Добавил в структуру словарей параметры local_ip (внутренний адрес) и external_ip (внешний адрес), которые вытягивают данные напрямую из первого сетевого интерфейса машин.
+
+```bash
+nano outputs.tf
+```
+
+> **Обновленный outputs.tf**
+> ```hcl
+> output "all_vms_info" {
+>   description = "Список словарей со всеми созданными ВМ из ресурсов count, for_each и одиночной ВМ storage"
+> 
+>   value = concat(
+>     [
+>       for vm in yandex_compute_instance.web_vm : {
+>         name        = vm.name
+>         id          = vm.id
+>         fqdn        = vm.fqdn
+>         local_ip    = vm.network_interface.0.ip_address
+>         external_ip = vm.network_interface.0.nat_ip_address
+>       }
+>     ],
+>     [
+>       for vm in values(yandex_compute_instance.db_vm) : {
+>         name        = vm.name
+>         id          = vm.id
+>         fqdn        = vm.fqdn
+>         local_ip    = vm.network_interface.0.ip_address
+>         external_ip = vm.network_interface.0.nat_ip_address
+>       }
+>     ],
+>     [
+>       {
+>         name        = yandex_compute_instance.storage_vm.name
+>         id          = yandex_compute_instance.storage_vm.id
+>         fqdn        = yandex_compute_instance.storage_vm.fqdn
+>         local_ip    = yandex_compute_instance.storage_vm.network_interface.0.ip_address
+>         external_ip = yandex_compute_instance.storage_vm.network_interface.0.nat_ip_address
+>       }
+>     ]
+>   )
+> }
+> ```
+
+### Шаг 5: Запустил сборку инфраструктуры. Скрипт local-exec успешно инициировал работу Ansible. В консоли отобразился статус UNREACHABLE, что является корректным поведением, так как ВМ изолированы внутри подсети и не имеют публичных адресов для прямого SSH-подключения. При этом измененные аутпуты успешно вывели внутренние IP-адреса.
+
+```bash
+terraform apply -auto-approve
+```
+
+> **Вывод логов выполнения команды apply:**
+> ```text
+> PLAY [test] ********************************************************************
+> 
+> TASK [Validating the ssh port is open and] *************************************
+> fatal: [web-1]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh..."}
+> fatal: [web-2]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh..."}
+> 
+> PLAY RECAP *********************************************************************
+> web-1                      : ok=0    changed=0    unreachable=1    failed=0
+> web-2                      : ok=0    changed=0    unreachable=1    failed=0
+> 
+> Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+> 
+> Outputs:
+> all_vms_info = [
+>   {
+>     "external_ip" = ""
+>     "fqdn" = "fhm4lvnpptlupjt8j5nl.auto.internal"
+>     "id" = "fhm4lvnpptlupjt8j5nl"
+>     "local_ip" = "10.0.1.11"
+>     "name" = "web-1"
+>   },
+>   ...
+> ]
+> ```
