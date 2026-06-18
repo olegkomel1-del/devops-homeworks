@@ -284,3 +284,86 @@ cat hosts.cfg
 > **Скриншот из консоли терминала**:  
 > 
 > ![4](https://github.com/user-attachments/assets/5b9136fe-1e6b-4977-a14a-5a5f66005ad2)
+
+## Задание 5* (Необязательное)
+
+### Шаг 1: Создал файл outputs.tf. С помощью генераторов списков [ for ... ] трансформировал метаданные виртуальных машин из ресурсов count и for_each в структуру словарей с ключами name, id и fqdn. Использовал функцию values() для приведения карты СУБД к списку, описал одиночный блок для машины storage и применил функцию concat() для динамического объединения всех ресурсов в один массив без хардкода.
+
+```bash
+nano outputs.tf
+```
+
+> **outputs.tf**
+> ```hcl
+> output "all_vms_info" {
+>   description = "Список словарей со всеми созданными ВМ из ресурсов count, for_each и одиночной ВМ storage"
+> 
+>   value = concat(
+>     [
+>       for vm in yandex_compute_instance.web_vm : {
+>         name = vm.name
+>         id   = vm.id
+>         fqdn = vm.fqdn
+>       }
+>     ],
+>     [
+>       for vm in values(yandex_compute_instance.db_vm) : {
+>         name = vm.name
+>         id   = vm.id
+>         fqdn = vm.fqdn
+>       }
+>     ],
+>     [
+>       {
+>         name = yandex_compute_instance.storage_vm.name
+>         id   = yandex_compute_instance.storage_vm.id
+>         fqdn = yandex_compute_instance.storage_vm.fqdn
+>       }
+>     ]
+>   )
+> }
+> ```
+
+### Шаг 2: Обновил состояние конфигурации и вывел структурированный список всех 5 ВМ в консоль.
+
+```bash
+terraform refresh
+terraform output all_vms_info
+```
+
+> **Вывод команды terraform output all_vms_info:**
+> ```text
+> all_vms_info = [
+>   {
+>     "fqdn" = "fhm4lvnpptlupjt8j5nl.auto.internal"
+>     "id" = "fhm4lvnpptlupjt8j5nl"
+>     "name" = "web-1"
+>   },
+>   {
+>     "fqdn" = "fhmq94d851b5prp370n1.auto.internal"
+>     "id" = "fhmq94d851b5prp370n1"
+>     "name" = "web-2"
+>   },
+>   {
+>     "fqdn" = "fhmmfpgps3e2f5ajvict.auto.internal"
+>     "id" = "fhmmfpgps3e2f5ajvict"
+>     "name" = "main"
+>   },
+>   {
+>     "fqdn" = "fhmdcnlv8s0g3ffllb2u.auto.internal"
+>     "id" = "fhmdcnlv8s0g3ffllb2u"
+>     "name" = "replica"
+>   },
+>   {
+>     "fqdn" = "fhmjk0ar3c1oldkudmqe.auto.internal"
+>     "id" = "fhmjk0ar3c1oldkudmqe"
+>     "name" = "storage"
+>   },
+> ]
+> ```
+
+> **Скриншот из консоли терминала**:  
+> 
+> ![4](https://github.com/user-attachments/assets/4c12e074-04d8-45db-9b9b-3c7515e852c9)
+
+
