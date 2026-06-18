@@ -214,3 +214,73 @@ terraform apply -auto-approve
 > 
 > ![3](https://github.com/user-attachments/assets/77c0e4ea-6563-4b10-b413-25ebfa8eb45f)
 
+## Задание 4
+
+### Шаг 1: Создал файл-шаблон hosts.tpl.
+
+```bash
+nano hosts.tpl
+```
+
+> **hosts.tpl**
+> ```ini
+> [webservers]
+> %{ for i in webservers ~}
+> ${i.name} ansible_host=${i.network_interface.nat_ip_address} fqdn=${i.fqdn}
+> %{ endfor ~}
+> 
+> [databases]
+> %{ for i in databases ~}
+> ${i.name} ansible_host=${i.network_interface.nat_ip_address} fqdn=${i.fqdn}
+> %{ endfor ~}
+> 
+> [storage]
+> %{ for i in storage ~}
+> ${i.name} ansible_host=${i.network_interface.nat_ip_address} fqdn=${i.fqdn}
+> %{ endfor ~}
+> ```
+
+### Шаг 2: Создал файл ansible.tf.
+
+```bash
+nano ansible.tf
+```
+
+> **ansible.tf**
+> ```hcl
+> resource "local_file" "hosts_cfg" {
+>   filename = "${path.module}/hosts.cfg"
+> 
+>   content = templatefile("${path.module}/hosts.tpl", {
+>     webservers = yandex_compute_instance.web_vm
+>     databases  = values(yandex_compute_instance.db_vm)
+>     storage    = [yandex_compute_instance.storage_vm]
+>   })
+> }
+> ```
+
+### Шаг 3: Проверил конфигурацию, применил изменения и вывел содержимое сгенерированного файла в терминал.
+
+```bash
+terraform validate
+terraform apply -auto-approve
+cat hosts.cfg
+```
+
+> **Вывод команды cat hosts.cfg:**
+> ```text
+> [webservers]
+> web-1 ansible_host=93.77.184.5 fqdn=fhm4lvnpptlupjt8j5nl.auto.internal
+> web-2 ansible_host=84.201.159.213 fqdn=fhmq94d851b5prp370n1.auto.internal
+> 
+> [databases]
+> main ansible_host=93.77.191.199 fqdn=fhmmfpgps3e2f5ajvict.auto.internal
+> replica ansible_host=93.77.191.3 fqdn=fhmdcnlv8s0g3ffllb2u.auto.internal
+> 
+> [storage]
+> storage ansible_host=111.88.250.56 fqdn=fhmjk0ar3c1oldkudmqe.auto.internal
+> ```
+
+> **Скриншот из консоли терминала**:  
+> 
+> ![4](https://github.com/user-attachments/assets/5b9136fe-1e6b-4977-a14a-5a5f66005ad2)
