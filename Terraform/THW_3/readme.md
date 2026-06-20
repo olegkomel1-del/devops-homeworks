@@ -464,34 +464,54 @@ nano outputs.tf
 terraform apply -auto-approve
 ```
 
-> **Вывод логов выполнения команды apply:**
-> ```text
-> PLAY [test] ********************************************************************
-> 
-> TASK [Validating the ssh port is open and] *************************************
-> fatal: [web-1]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh..."}
-> fatal: [web-2]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh..."}
-> 
-> PLAY RECAP *********************************************************************
-> web-1                      : ok=0    changed=0    unreachable=1    failed=0
-> web-2                      : ok=0    changed=0    unreachable=1    failed=0
-> 
-> Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
-> 
-> Outputs:
-> all_vms_info = [
->   {
->     "external_ip" = ""
->     "fqdn" = "fhm4lvnpptlupjt8j5nl.auto.internal"
->     "id" = "fhm4lvnpptlupjt8j5nl"
->     "local_ip" = "10.0.1.11"
->     "name" = "web-1"
->   },
->   ...
-> ]
-> ```
-
 > **Скриншот из консоли терминала**:  
 > 
 > ![5](https://github.com/user-attachments/assets/9f80cd9d-8f8c-4f3d-9566-6c3cd5b83bdb)
+
+
+## Задание 7* (Необязательное)
+
+### Шаг 1: Объявил исходную тестовую структуру данных vpc внутри блока locals в коде проекта.
+
+```hcl
+locals {
+  vpc = {
+    network_id = "enp7i560tb28nageq0cc"
+    subnet_ids = [
+      "e9b0le401619ngf4h68n",
+      "e2lbar6u8b2ftd7f5hia",
+      "b0ca48coorjjq93u36pl",
+      "fl8ner8rjsio6rcpcf0h",
+    ]
+    subnet_zones = [
+      "ru-central1-a",
+      "ru-central1-b",
+      "ru-central1-c",
+      "ru-central1-d",
+    ]
+  }
+}
+```
+
+### Шаг 2: Запустил интерактивный режим работы конфигуратора и ввёл динамическое выражение. 
+
+```bash
+terraform console
+```
+
+> **Выражение в terraform console:**
+> ```hcl
+> { 
+>   network_id   = local.vpc.network_id, 
+>   subnet_ids   = [for idx, id in local.vpc.subnet_ids : id if idx != 2], 
+>   subnet_zones = [for idx, zone in local.vpc.subnet_zones : zone if idx != 2] 
+> }
+> ```
+
+> **Конечный результат вывода:**
+>
+> ![6](https://github.com/user-attachments/assets/bb095f94-6615-4909-b3a8-28fe8a626516)
+
+
+
 
