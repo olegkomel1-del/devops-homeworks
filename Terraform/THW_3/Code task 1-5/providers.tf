@@ -12,5 +12,5 @@ provider "yandex" {
 #  cloud_id                 = sensitive("")
 #  folder_id                = sensitive("")
   zone                     = var.default_zone
-  service_account_key_file = file("~/ter-homeworks/02/src/.key.json")
+  service_account_key_file = file("${path.module}/.key.json")
 }
