@@ -512,6 +512,34 @@ terraform console
 >
 > ![6](https://github.com/user-attachments/assets/bb095f94-6615-4909-b3a8-28fe8a626516)
 
+## Задание 8* (Необязательное)
 
+### Шаг 1: Создал тестовый файл bad_hosts.tpl и вставил в него предложенный в задании код с намеренно допущенными ошибками. В файле ansible.tf временно переключил функцию templatefile на чтение этого сломанного шаблона.
+
+### Шаг 2: Запустил боевую проверку синтаксиса через утилиту terraform validate.
+
+```bash
+terraform validate
+```
+
+> **Вывод лога ошибки от terraform validate:**
+> ```text
+> │ Error: Error in function call
+> │ 
+> │   on ansible.tf line 4, in resource "local_file" "hosts_cfg":
+> │    4:     content = templatefile("\${path.module}/bad_hosts.tpl", {
+> │ 
+> │ Call to function "templatefile" failed: ./bad_hosts.tpl:3,85-86: Invalid character; This character is not used within the language., and 1 other diagnostic(s).
+> ```
+
+### Шаг 3: Провел аудит лога и устранил две ошибки в bad_hosts.tpl:
+1. **Пропущена закрывающая фигурная скобка `}`** в блоке интерполяции адреса: `ansible_host=${i["network_interface"]["nat_ip_address"]`. Из-за этого парсер посчитал остаток строки частью выражения.
+2. **Лишний пробел в имени ключа** платформы: `i["platform_id "]`. Изменил его на строгое имя `"platform_id"`.
+
+После внесения правок и возврата оригинального шаблона в ansible.tf, проверка успешно прошла со статусом `Success!`.
+
+> **Скриншот из консоли терминала**:  
+> 
+> ![7](https://github.com/user-attachments/assets/92645642-45f9-4f60-99ad-4356e8ee0762)
 
 
