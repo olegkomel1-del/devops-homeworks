@@ -24,8 +24,7 @@ packages:
   - nginx
 ```
 
-### Шаг 2: Настроил вызовы remote-модулей в файле main.tf<img width="1828" height="155" alt="10" src="https://github.com/user-attachments/assets/0f2e5d4a-08de-4efe-af46-77c81f48adc1" />
-
+### Шаг 2: Настроил вызовы remote-модулей в файле main.tf
 
 > **main.tf**
 ```hcl
