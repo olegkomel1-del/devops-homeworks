@@ -252,7 +252,7 @@ resource "yandex_compute_instance" "analytics_server" {
    terraform apply -auto-approve
    ```
 2. **Скриншот информации из terraform console о созданном модуле:**  
-   ![Terraform Console VPC](https://github.com/user-attachments/assets/162e095c-365b-411f-8deb-02befbf3faee)
+>   ![Terraform Console VPC](https://github.com/user-attachments/assets/162e095c-365b-411f-8deb-02befbf3faee)
 
 
 3. **Сгенерировал автоматическую документацию к модулю vpc с помощью terraform-docs:**
@@ -262,7 +262,7 @@ resource "yandex_compute_instance" "analytics_server" {
    cd vpc
    terraform-docs markdown table . > README.md
    ```
-  ![1](https://github.com/user-attachments/assets/3436c19e-c6e3-4a96-8d49-c4d4c77aa040)
+>  ![1](https://github.com/user-attachments/assets/3436c19e-c6e3-4a96-8d49-c4d4c77aa040)
 
 
 ### С какими проблемами столкнулся и как их решил:
