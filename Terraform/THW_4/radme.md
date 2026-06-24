@@ -280,14 +280,15 @@ resource "yandex_compute_instance" "analytics_server" {
 ## Задание 3
 
 ### Шаг 1: Вывел текущий список ресурсов из стейта
-Перед очисткой стейта проверил точные адреса всех управляемых ресурсов в конфигурации:
+
 ```bash
 terraform state list
 ```
-*(Вставьте ваш Скриншот №1 со списком из 6 ресурсов)*
+  
+> ![terraform state list](https://github.com/user-attachments/assets/85b9c14c-7987-4106-8906-4f3753725b90)  
 
 ### Шаг 2: Полностью удалил модули vpc и виртуальные машины из стейта
-Применил команду `state rm`, чтобы стереть ресурсы из памяти Terraform, оставив их работать в Yandex Cloud в качестве неуправляемых («сирот»):
+
 ```bash
 terraform state rm module.vpc_marketing
 terraform state rm module.vpc_analytics
@@ -295,8 +296,11 @@ terraform state rm yandex_compute_instance.marketing_server
 terraform state rm yandex_compute_instance.analytics_server
 ```
 
+> ![terraform state rm](https://github.com/user-attachments/assets/5385ca4c-f887-4814-b30d-195c92ae1f7e)
+
+
 ### Шаг 3: Импортировал все ресурсы обратно в состояние Terraform
-Собрал идентификаторы (ID) созданных сетей, подсетей и виртуальных машин из веб-консоли Yandex Cloud и принудительно импортировал их обратно в структуру проекта:
+
 ```bash
 # Восстановление сетевой структуры локальных модулей (Сети и Подсети)
 terraform import module.vpc_marketing.yandex_vpc_network.network <ID_СЕТИ_MARKETING>
@@ -315,6 +319,7 @@ terraform import yandex_compute_instance.analytics_server <ID_ВМ_ANALYTICS>
 ```bash
 terraform plan
 ```
-*Результат проверки: Структура стейта полностью восстановлена. Значимых изменений конфигурации не обнаружено, деструктивные действия отсутствуют, инфраструктура полностью соответствует коду (`No changes. Your infrastructure matches the configuration.`)*.
-*(Вставьте Скриншот №3 чистого вывода terraform plan)*
+  
+> ![terraform plan](https://github.com/user-attachments/assets/9dc9bb1d-19e9-4598-8a4f-d84a1e8b97a4)
+
 
