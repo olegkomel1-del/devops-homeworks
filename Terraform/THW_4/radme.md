@@ -321,4 +321,105 @@ terraform plan
   
 > ![terraform plan](https://github.com/user-attachments/assets/9dc9bb1d-19e9-4598-8a4f-d84a1e8b97a4)
 
+## Задание 4*
+
+### Шаг 1: Модернизировал локальный модуль vpc под работу с циклами
+
+> **vpc/variables.tf**
+```hcl
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
+variable "env_name" {
+  type        = string
+  description = "Название окружения для префикса имени сети"
+}
+
+variable "subnets" {
+  type = list(object({
+    zone = string
+    cidr = string
+  }))
+  description = "Список подсетей со своими зонами и CIDR блоками"
+}
+```
+
+> **vpc/main.tf**
+```hcl
+resource "yandex_vpc_network" "network" {
+  name = "\${var.env_name}-network"
+}
+
+resource "yandex_vpc_subnet" "subnet" {
+
+  for_each       = { for subnet in var.subnets : subnet.zone => subnet }
+  
+  name           = "\${var.env_name}-\${each.value.zone}"
+  zone           = each.value.zone
+  network_id     = yandex_vpc_network.network.id
+  v4_cidr_blocks = [each.value.cidr]
+}
+```
+
+> **vpc/outputs.tf**
+```hcl
+output "subnets" {
+  value       = yandex_vpc_subnet.subnet
+  description = "Карта всех созданных подсетей в модуле"
+}
+```
+
+### Шаг 2: Реализовал мульти-вызов модуля в корневом файле main.tf
+
+> **main.tf**
+```hcl
+module "vpc_prod" {
+  source   = "./vpc"
+  env_name = "production"
+  subnets = [
+    { zone = "ru-central1-a", cidr = "10.0.1.0/24" },
+    { zone = "ru-central1-b", cidr = "10.0.2.0/24" },
+    { zone = "ru-central1-d", cidr = "10.0.3.0/24" }
+  ]
+}
+
+module "vpc_dev" {
+  source   = "./vpc"
+  env_name = "develop"
+  subnets = [
+    { zone = "ru-central1-a", cidr = "10.10.1.0/24" }
+  ]
+}
+```
+
+### Шаг 3: Проверка конфигурации и результаты деплоя
+
+1. **План выполнения конфигурации:**
+   ```bash
+   terraform plan
+   ```
+   > ![terraform plan](https://github.com/user-attachments/assets/fec1c7e4-83c5-4976-80d5-73213705ea66)
+
+
+2. **Применение конфигурации и проверка в консоли YC:**
+ 
+   ```bash
+   terraform apply -auto-approve
+   ```
+   > ![terraform apply](https://github.com/user-attachments/assets/3a37cd21-5fa6-4533-bf14-5f92c6de2123)
+
+3. **Инспекция выходной структуры данных:**
+
+   ```bash
+   terraform console
+   > module.vpc_prod.subnets
+   ```
+      
+   > ![terraform console](https://github.com/user-attachments/assets/e9a331e5-28f9-4136-9e93-c6941e86edb6)
+
 
