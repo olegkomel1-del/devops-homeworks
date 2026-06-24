@@ -104,3 +104,160 @@ variable "default_zone" {
 >
 > ![Terraform Console Module](https://github.com/user-attachments/assets/aaf106ea-a613-4852-a174-5cceb47307ec)
 
+## Задание 2
+
+### Шаг 1: Разработал локальный модуль vpc
+Создал изолированную директорию `vpc` внутри папки `vms` со следующей структурой конфигурационных файлов. Объявил обязательные входные переменные без дефолтных значений и настроил явную привязку к зеркалу Яндекса для исключения неявных конфликтов провайдеров.
+
+> **vpc/variables.tf**
+```hcl
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
+variable "env_name" {
+  type        = string
+  description = "Название окружения (используется как префикс для имени сети)"
+}
+
+variable "zone" {
+  type        = string
+  description = "Зона доступности для создаваемой подсети"
+}
+
+variable "cidr" {
+  type        = string
+  description = "CIDR блок для адресации подсети"
+}
+```
+
+> **vpc/main.tf**
+```hcl
+resource "yandex_vpc_network" "network" {
+  name = "\${var.env_name}-network"
+}
+
+resource "yandex_vpc_subnet" "subnet" {
+  name           = "\${var.env_name}-\${var.zone}"
+  zone           = var.zone
+  network_id     = yandex_vpc_network.network.id
+  v4_cidr_blocks = [var.cidr]
+}
+```
+
+> **vpc/outputs.tf**
+```hcl
+output "subnet" {
+  value       = yandex_vpc_subnet.subnet
+  description = "Полный объект созданной подсети со всеми атрибутами"
+}
+```
+
+### Шаг 2: Интегрировал локальный модуль в корневой main.tf и переписал ресурсы ВМ
+Полностью удалил старые глобальные ресурсы сетей. Вместо них объявил два вызова нового модуля `vpc` для проектов `marketing` и `analytics`. Параметры ID сетей, подсетей и зон динамически передаются из выходов дочернего модуля во входные параметры стандартных ресурсов виртуальных машин.
+
+> **main.tf**
+```hcl
+module "vpc_marketing" {
+  source   = "./vpc"
+  env_name = "marketing"
+  zone     = "ru-central1-a"
+  cidr     = "10.0.1.0/24"
+}
+
+module "vpc_analytics" {
+  source   = "./vpc"
+  env_name = "analytics"
+  zone     = "ru-central1-b"
+  cidr     = "10.0.2.0/24"
+}
+
+data "yandex_compute_image" "ubuntu" {
+  family = "ubuntu-2004-lts"
+}
+
+resource "yandex_compute_instance" "marketing_server" {
+  name        = "marketing-server"
+  platform_id = "standard-v1"
+  zone        = module.vpc_marketing.subnet.zone
+
+  resources {
+    cores  = 2
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.id
+    }
+  }
+
+  network_interface {
+    subnet_id = module.vpc_marketing.subnet.id
+    nat       = true
+  }
+
+  labels = { project = "marketing" }
+
+  metadata = {
+    serial-port-enable = 1
+    user-data          = templatefile("\${path.module}/cloud-init.yml", {
+      ssh_key = file("/home/o_komel/ssh-key-1778067207541")
+    })
+  }
+}
+
+resource "yandex_compute_instance" "analytics_server" {
+  name        = "analytics-server"
+  platform_id = "standard-v1"
+  zone        = module.vpc_analytics.subnet.zone
+
+  resources {
+    cores  = 2
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.id
+    }
+  }
+
+  network_interface {
+    subnet_id = module.vpc_analytics.subnet.id
+    nat       = true
+  }
+
+  labels = { project = "analytics" }
+
+  metadata = {
+    serial-port-enable = 1
+    user-data          = templatefile("\${path.module}/cloud-init.yml", {
+      ssh_key = file("/home/o_komel/ssh-key-1778067207541")
+    })
+  }
+}
+```
+
+### Шаг 3: Проверка результатов и генерация документации
+1. Очистил устаревший кэш плагинов, успешно инициализировал и развернул чистую конфигурацию (всего добавлено 6 ресурсов):
+   ```bash
+   rm -rf .terraform .terraform.lock.hcl
+   terraform init
+   terraform apply -auto-approve
+   ```
+2. **Скриншот информации из terraform console о созданном модуле:**
+   ![Terraform Console VPC](https://ваш-путь-к-скриншоту-vpc.png)
+
+3. **Сгенерировал автоматическую документацию к модулю vpc с помощью terraform-docs:**
+   Установил утилиту через snap-пакет и выполнил экспорт структуры таблиц в markdown:
+   ```bash
+   sudo snap install terraform-docs
+   cd vpc
+   terraform-docs markdown table . > README.md
+   ```
+   *(Вставьте ваш текущий скриншот с выводом cat README.md)*
