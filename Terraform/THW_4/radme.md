@@ -276,3 +276,45 @@ resource "yandex_compute_instance" "analytics_server" {
    Когда запустил сборку, Яндекс выдал ошибку `Quota limit vpc.networks.count exceeded`. Модуль пытался создать две новые сети, но на бесплатном аккаунте разрешено иметь всего 2 сети одновременно. Лимит забился, так как в облаке всё ещё висели старые сервера от первого задания, о которых Terraform забыл на прошлом шаге.
    
    *Как решил:* Зашёл вручную в личный кабинет Yandex Cloud через браузер. Последовательно удалил руками старые виртуалки, их подсети и старую сеть `develop`. Как только место освободилось, заново запустил `terraform apply`, и все 6 новых ресурсов создались без единой ошибки.
+
+## Задание 3
+
+### Шаг 1: Вывел текущий список ресурсов из стейта
+Перед очисткой стейта проверил точные адреса всех управляемых ресурсов в конфигурации:
+```bash
+terraform state list
+```
+*(Вставьте ваш Скриншот №1 со списком из 6 ресурсов)*
+
+### Шаг 2: Полностью удалил модули vpc и виртуальные машины из стейта
+Применил команду `state rm`, чтобы стереть ресурсы из памяти Terraform, оставив их работать в Yandex Cloud в качестве неуправляемых («сирот»):
+```bash
+terraform state rm module.vpc_marketing
+terraform state rm module.vpc_analytics
+terraform state rm yandex_compute_instance.marketing_server
+terraform state rm yandex_compute_instance.analytics_server
+```
+
+### Шаг 3: Импортировал все ресурсы обратно в состояние Terraform
+Собрал идентификаторы (ID) созданных сетей, подсетей и виртуальных машин из веб-консоли Yandex Cloud и принудительно импортировал их обратно в структуру проекта:
+```bash
+# Восстановление сетевой структуры локальных модулей (Сети и Подсети)
+terraform import module.vpc_marketing.yandex_vpc_network.network <ID_СЕТИ_MARKETING>
+terraform import module.vpc_marketing.yandex_vpc_subnet.subnet <ID_ПОДСЕТИ_MARKETING>
+terraform import module.vpc_analytics.yandex_vpc_network.network <ID_СЕТИ_ANALYTICS>
+terraform import module.vpc_analytics.yandex_vpc_subnet.subnet <ID_ПОДСЕТИ_ANALYTICS>
+
+# Восстановление виртуальных машин
+terraform import yandex_compute_instance.marketing_server <ID_ВМ_MARKETING>
+terraform import yandex_compute_instance.analytics_server <ID_ВМ_ANALYTICS>
+```
+*(Вставьте Скриншот №2 процесса успешного импорта ресурсов `Import successful!`)*
+
+### Шаг 4: Проверка конфигурации с помощью terraform plan
+Запустил финальную сверку кода с восстановленным стейтом:
+```bash
+terraform plan
+```
+*Результат проверки: Структура стейта полностью восстановлена. Значимых изменений конфигурации не обнаружено, деструктивные действия отсутствуют, инфраструктура полностью соответствует коду (`No changes. Your infrastructure matches the configuration.`)*.
+*(Вставьте Скриншот №3 чистого вывода terraform plan)*
+
