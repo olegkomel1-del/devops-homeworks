@@ -237,8 +237,7 @@ ansible-playbook -i inventory/prod.yml site.yml --diff
 
 > **Вывод повторного прогона (идемпотентность)**:  
 >   
-> ![Скриншот повторного прогона](https://github.com/user-attachments/assets/2a577fc0-13a3-4c73-bb28-2f91a2a03927>
-)
+> ![Скриншот повторного прогона](https://github.com/user-attachments/assets/2a577fc0-13a3-4c73-bb28-2f91a2a03927)
 
 
 
