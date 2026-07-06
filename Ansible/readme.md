@@ -199,7 +199,7 @@ ansible-lint site.yml
 
 > **Вывод ansible-lint**:  
 >   
-> ![Скриншот прохождения линтера](<img width="928" height="113" alt="53" src="https://github.com/user-attachments/assets/2c085ea5-5d7d-4b76-bc10-1ec230e25cea" />)
+> ![Скриншот прохождения линтера](https://github.com/user-attachments/assets/2c085ea5-5d7d-4b76-bc10-1ec230e25cea)
 
 
 ### Шаг 5: Тестовое выполнение playbook с флагом --check
