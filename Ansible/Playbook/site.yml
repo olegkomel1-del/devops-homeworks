@@ -2,7 +2,7 @@
 - name: Install Clickhouse
   hosts: clickhouse
   vars:
-    clickhouse_version: "23.3.8.21"  # Укажите вашу версию, если она задана в group_vars, можно удалить эту строку
+    clickhouse_version: "23.3.3.44"
     clickhouse_packages:
       - clickhouse-client
       - clickhouse-server
