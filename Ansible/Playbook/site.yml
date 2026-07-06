@@ -18,7 +18,7 @@
     - block:
         - name: Download Clickhouse DEB packages
           ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/pool/main/c/{{ item }}/{{ item }}_{{ clickhouse_version }}_amd64.deb"
+            url: "https://packages.clickhouse.com/deb/pool/main/c/{{ item }}/{{ item }}_{{ clickhouse_version }}_all.deb"
             dest: "/tmp/{{ item }}_{{ clickhouse_version }}_amd64.deb"
             mode: '0644'
           loop: "{{ clickhouse_packages }}"
