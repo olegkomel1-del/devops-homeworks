@@ -212,7 +212,7 @@ ansible-playbook -i inventory/prod.yml site.yml --check
 
 > **Вывод тестового прогона**:  
 >   
-> ![Скриншот прогона check](СЮДА_ССЫЛКУ_НА_СКРИН_CHECK)
+> ![Скриншот прогона check](https://github.com/user-attachments/assets/4b9c2f88-ac12-4bc0-906c-b469ce59006e)
 
 ### Шаг 6: Боевой запуск playbook с флагом --diff
 
@@ -224,7 +224,8 @@ ansible-playbook -i inventory/prod.yml site.yml --diff
 
 > **Вывод боевого прогона с diff**:  
 >   
-> ![Скриншот боевого прогона с diff](СЮДА_ССЫЛКУ_НА_СКРИН_DIFF)
+> ![Скриншот боевого прогона с diff](https://github.com/user-attachments/assets/81cec9b1-ceb7-44f0-8a56-d574e675c903)
+
 
 ### Шаг 7: Повторный запуск для проверки идемпотентности
 
@@ -236,6 +237,8 @@ ansible-playbook -i inventory/prod.yml site.yml --diff
 
 > **Вывод повторного прогона (идемпотентность)**:  
 >   
-> ![Скриншот повторного прогона](СЮДА_ССЫЛКУ_НА_СКРИН_ИДЕМПОТЕНТНОСТИ)
-<img width="928" height="113" alt="53" src="https://github.com/user-attachments/assets/863b7545-fdb0-4e3d-834f-b278ffeec1ff" />
+> ![Скриншот повторного прогона](https://github.com/user-attachments/assets/2a577fc0-13a3-4c73-bb28-2f91a2a03927>
+)
+
+
 
