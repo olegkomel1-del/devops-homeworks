@@ -29,15 +29,16 @@
             dest: "/tmp/clickhouse-common-static-{{ clickhouse_version }}.rpm"
             mode: '0644'
 
-    - name: Install clickhouse packages
+    - name: Install clickhouse packages on Ubuntu
       become: true
       ansible.builtin.apt:
-        name:
-          - "/tmp/clickhouse-common-static-{{ clickhouse_version }}.rpm"
-          - "/tmp/clickhouse-client-{{ clickhouse_version }}.rpm"
-          - "/tmp/clickhouse-server-{{ clickhouse_version }}.rpm"
-        disable_gpg_check: true
+        deb: "/tmp/{{ item }}_{{ clickhouse_version }}_amd64.deb"
+      loop:
+        - clickhouse-common-static
+        - clickhouse-client
+        - clickhouse-server
       notify: Start clickhouse service
+
 
     - name: Flush handlers
       meta: flush_handlers
