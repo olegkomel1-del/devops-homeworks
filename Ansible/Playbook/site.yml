@@ -31,7 +31,7 @@
 
     - name: Install clickhouse packages
       become: true
-      ansible.builtin.yum:
+      ansible.builtin.apt:
         name:
           - "/tmp/clickhouse-common-static-{{ clickhouse_version }}.rpm"
           - "/tmp/clickhouse-client-{{ clickhouse_version }}.rpm"
