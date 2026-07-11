@@ -18,5 +18,5 @@ endpoint = "http://{{ hostvars[groups['clickhouse']|first]['ansible_host'] }}:81
 database = "logs"
 table = "syslog"
 skip_unknown_fields = true
-
+encoding.codec = "text"
 
