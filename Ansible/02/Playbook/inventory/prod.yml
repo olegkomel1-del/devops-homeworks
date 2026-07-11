@@ -1,1 +1,13 @@
-
+---
+all:
+  children:
+    clickhouse:
+      hosts:
+        clickhouse-01:
+          ansible_host: 111.88.242.19
+    vector_servers:
+      hosts:
+        vector-01:
+          ansible_host: 111.88.245.121
+  vars:
+    ansible_user: o_komel
