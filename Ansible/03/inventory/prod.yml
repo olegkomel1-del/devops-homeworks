@@ -1,0 +1,18 @@
+---
+all:
+  children:
+    clickhouse:
+      hosts:
+        clickhouse-01:
+          ansible_host: 93.77.184.136
+    vector_servers:
+      hosts:
+        vector-01:
+          ansible_host: 93.77.179.123
+    lighthouse:
+      hosts:
+        lighthouse-01:
+          ansible_host: 51.250.79.25
+  vars:
+    ansible_user: o_komel
+    ansible_ssh_private_key_file: ~/.ssh/ssh-key-1778067207541
