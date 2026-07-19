@@ -1,0 +1,58 @@
+---
+- name: Install Nginx web server
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Install unzip package
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+
+- name: Ensure LightHouse directory exists
+  ansible.builtin.file:
+    path: "{{ lighthouse_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Download LightHouse archive
+  ansible.builtin.get_url:
+    url: "{{ lighthouse_download_url }}"
+    dest: "/tmp/lighthouse.zip"
+    mode: '0644'
+
+- name: Extract LightHouse static files
+  ansible.builtin.unarchive:
+    src: "/tmp/lighthouse.zip"
+    dest: "{{ lighthouse_dir }}"
+    remote_src: true
+    extra_opts: ['-j']
+    creates: "{{ lighthouse_dir }}/index.html"
+
+- name: Deploy Nginx configuration for LightHouse
+  ansible.builtin.template:
+    src: lighthouse.conf.j2
+    dest: /etc/nginx/sites-available/lighthouse.conf
+    mode: '0644'
+  notify: Reload nginx
+
+- name: Enable LightHouse Nginx site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/lighthouse.conf
+    dest: /etc/nginx/sites-enabled/lighthouse.conf
+    state: link
+  notify: Reload nginx
+
+- name: Remove default Nginx site configuration
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
+- name: Ensure Nginx service is running and enabled
+  ansible.builtin.systemd:
+    name: nginx
+    state: started
+    enabled: true
+

@@ -1,0 +1,8 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for vector-role
+---
+vector_version: "0.40.0"
+vector_archive: "vector-{{ vector_version }}-x86_64-unknown-linux-musl.tar.gz"
+vector_download_url: "https://github.com/vectordotdev/vector/releases/download/v0.40.0/{{ vector_archive }}"
+
