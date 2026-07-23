@@ -26,7 +26,8 @@ ansible-playbook -i "localhost," playbook.yml
 **Описание:**
 Первичный запуск плейбука создает файл (статус changed=1), повторный запуск подтверждает идемпотентность (статус changed=0).
 
-> **[ Вставить скриншот №2: Повторный запуск playbook.yml с changed=0 ]**
+> ![Повторный запуск playbook.yml с changed=0](https://github.com/user-attachments/assets/53fafef0-3918-4a7a-87ae-1289cd7839ba)
+
 
 ---
 
@@ -52,7 +53,8 @@ ANSIBLE_COLLECTIONS_PATH=. ansible-playbook -i "localhost," site.yml
 **Описание:**
 Проверка вызова роли коллекции через плейбук site.yml. Повторный запуск демонстрирует корректную работу и идемпотентность.
 
-> **[ Вставить скриншот №3: Повторный запуск site.yml через коллекцию с changed=0 ]**
+> ![Повторный запуск site.yml](https://github.com/user-attachments/assets/1855d7cc-c081-4c05-b35c-0f97dca962f7)
+
 
 ---
 
