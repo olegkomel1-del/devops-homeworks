@@ -1,0 +1,6 @@
+---
+- name: Test collection role
+  hosts: localhost
+  connection: local
+  roles:
+    - role: my_own_namespace.yandex_cloud_elk.my_role
