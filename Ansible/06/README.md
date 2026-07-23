@@ -13,7 +13,7 @@ python3 my_own_module.py /tmp/test_module.txt "Test content"
 **Описание:**
 Проверка базовой работоспособности модуля через прямой вызов интерпретатором Python.
 
-> ![Локальный запуск модуля через Python](<img width="1304" height="59" alt="63" src="https://github.com/user-attachments/assets/318767c0-5211-4e44-994f-f2b32fa7ca80" />)
+> ![Локальный запуск модуля через Python](https://github.com/user-attachments/assets/318767c0-5211-4e44-994f-f2b32fa7ca80)
 
 
 ---
