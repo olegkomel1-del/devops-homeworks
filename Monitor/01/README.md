@@ -252,8 +252,9 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 
 ## 10. Задание со *
 
-> ### 1. Python-скрипт (/usr/local/bin/awesome-monitoring.py)
->
+### 1. Python-скрипт
+
+>(/usr/local/bin/awesome-monitoring.py)
 > ```python
 >#!/usr/bin/env python3
 >import json
@@ -317,3 +318,9 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 >    f.write(json.dumps(metrics) + '\n')
 >```
    
+### Конфигурация cron
+
+>sudo crontab -l
+> ```text
+> * * * * * /usr/bin/python3 /usr/local/bin/awesome-monitoring.py
+> ```
