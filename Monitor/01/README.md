@@ -240,4 +240,8 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 
 ## 7. Интерфейс Chronograf
 
-[Интерфейс Chronograf](https://github.com/user-attachments/assets/a61ae5d4-9ae6-428a-b038-3f11c482a4df)
+![Интерфейс Chronograf](https://github.com/user-attachments/assets/a61ae5d4-9ae6-428a-b038-3f11c482a4df)
+
+## 8. Утилизация cpu из веб-интерфейса
+
+![Утилизация cpu](https://github.com/user-attachments/assets/61036fca-0192-48df-924a-c16ad5e0a6f4)
