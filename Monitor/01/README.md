@@ -324,3 +324,8 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 > ```text
 > * * * * * /usr/bin/python3 /usr/local/bin/awesome-monitoring.py
 > ```
+
+### Скриншоты вывода команды:
+
+>cat /var/log/$(date +%y-%m-%d)-awesome-monitoring.log
+>![cat /var/log/$(date +%y-%m-%d)-awesome-monitoring.log](https://github.com/user-attachments/assets/8dc50725-1e02-4c3e-aba9-ffce38302449)
