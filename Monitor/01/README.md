@@ -140,8 +140,8 @@
 ``` text
 SLA = (summ_2xx_requests + summ_3xx_requests) / summ_all_requests
 ```
-``` text
 Или, если 3xx считаются нежелательными в конкретном сценарии, — явно исключать только ошибки:
+``` text
 SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_requests
 ```
 
