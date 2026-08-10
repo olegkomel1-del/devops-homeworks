@@ -238,6 +238,6 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 | VictoriaMetrics  |  ✅  |  ✅  |   ✅   |
 | Nagios           |  ✅  |      |        |
 
->## 7. Интерфейс Chronograf
->
->[Интерфейс Chronograf](https://github.com/user-attachments/assets/a61ae5d4-9ae6-428a-b038-3f11c482a4df)
+## 7. Интерфейс Chronograf
+
+[Интерфейс Chronograf](https://github.com/user-attachments/assets/a61ae5d4-9ae6-428a-b038-3f11c482a4df)
