@@ -250,3 +250,70 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 
 ![Плагин - docker](https://github.com/user-attachments/assets/f1470e37-d32c-40a5-ab52-85f35a8542eb)
 
+## 10. Задание со *
+
+> ### 1. Python-скрипт (/usr/local/bin/awesome-monitoring.py)
+>
+> ```python
+>#!/usr/bin/env python3
+>import json
+>import time
+>import os
+>from datetime import datetime
+>
+>def get_cpu_usage():
+>    with open('/proc/stat', 'r') as f:
+>        fields = f.readline().split()
+>        # user, nice, system, idle, iowait, irq, softirq, steal
+>        idle = int(fields[4])
+>        total = sum(int(x) for x in fields[1:])
+>        return round((1 - idle / total) * 100, 2) if total else 0
+>
+>def get_mem_usage():
+>    with open('/proc/meminfo', 'r') as f:
+>        lines = f.readlines()
+>    mem = {}
+>    for line in lines:
+>        parts = line.split(':')
+>        if len(parts) == 2:
+>            mem[parts[0].strip()] = int(parts[1].strip().split()[0])
+>    used = mem.get('MemTotal', 0) - mem.get('MemAvailable', 0)
+>    return round(used / mem.get('MemTotal', 1) * 100, 2) if mem.get('MemTotal') else 0
+>
+>def get_disk_usage():
+>    stat = os.statvfs('/')
+>    total = stat.f_frsize * stat.f_blocks
+>    free = stat.f_frsize * stat.f_bavail
+>    return round((1 - free / total) * 100, 2) if total else 0
+>
+>def get_load_avg():
+>    with open('/proc/loadavg', 'r') as f:
+>        return float(f.readline().split()[0])
+>
+>def get_uptime():
+>    with open('/proc/uptime', 'r') as f:
+>        return int(float(f.readline().split()[0]))
+>
+>def get_running_containers():
+>    try:
+>        import subprocess
+>        result = subprocess.run(['docker', 'ps', '-q'], capture_output=True, text=True)
+>        return len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+>    except:
+>        return -1
+>
+>metrics = {
+>    "timestamp": int(time.time()),
+>    "cpu_usage_percent": get_cpu_usage(),
+>    "mem_usage_percent": get_mem_usage(),
+>    "disk_usage_percent": get_disk_usage(),
+>    "load_avg_1min": get_load_avg(),
+>    "uptime_seconds": get_uptime(),
+>    "running_containers": get_running_containers()
+>}
+>
+>logfile = f"/var/log/{datetime.now().strftime('%y-%m-%d')}-awesome-monitoring.log"
+>with open(logfile, 'a') as f:
+>    f.write(json.dumps(metrics) + '\n')
+>```
+   
