@@ -245,3 +245,8 @@ SLA = (summ_all_requests - summ_4xx_requests - summ_5xx_requests) / summ_all_req
 ## 8. Утилизация cpu из веб-интерфейса
 
 ![Утилизация cpu](https://github.com/user-attachments/assets/61036fca-0192-48df-924a-c16ad5e0a6f4)
+
+## 9. Добавить в конфигурацию telegraf плагин - docker
+
+![Плагин - docker](https://github.com/user-attachments/assets/f1470e37-d32c-40a5-ab52-85f35a8542eb)
+
