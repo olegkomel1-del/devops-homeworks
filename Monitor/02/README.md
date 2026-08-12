@@ -40,3 +40,17 @@
 >node_filesystem_avail_bytes{mountpoint="/"} / 1024 / 1024 / 1024
 >```
 
+## 3. Создать Alerts
+
+### Alerts
+
+![Alerts](https://github.com/user-attachments/assets/fca7229f-ad38-4627-9f6e-c2b30a29addc)
+
+### Test alert message
+
+![Test alert message](https://github.com/user-attachments/assets/3296adab-2716-458b-b14d-855183a69407)
+
+## 4. Сохранить JSON MODEL
+
+### JSON MODEL
+
