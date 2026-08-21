@@ -20,4 +20,10 @@
 [elasticsearch/config/elasticsearch-hot.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/elasticsearch/config/elasticsearch-hot.yml)  
 [elasticsearch/config/elasticsearch-warm.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/elasticsearch/config/elasticsearch-warm.yml)  
 
+## 5. Data Views
 
+![Data Views](https://github.com/user-attachments/assets/11272f06-258b-4902-9353-0b7887705bf7)
+
+## 6. Discover
+
+![Discover](https://github.com/user-attachments/assets/b179dc56-4753-4009-bf42-0983d0b97176)
