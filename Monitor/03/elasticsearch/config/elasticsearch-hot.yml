@@ -1,0 +1,7 @@
+cluster.name: "docker-cluster"
+node.name: hot-node
+node.roles: ["data", "master"]
+network.host: 0.0.0.0
+discovery.seed_hosts: ["elasticsearch-hot", "elasticsearch-warm"]
+cluster.initial_master_nodes: ["hot-node"]
+xpack.security.enabled: false
