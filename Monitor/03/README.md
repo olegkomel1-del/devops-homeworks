@@ -14,8 +14,10 @@
 
 ## 4. yml-конфигурации для стека
 
-[logstash/config/logstash.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/logstash/config/logstash.yml)
-[logstash/pipeline/logstash.conf](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/logstash/pipeline/logstash.conf)
-[filebeat/filebeat.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/filebeat/filebeat.yml)
-[elasticsearch/config/elasticsearch-hot.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/elasticsearch/config/elasticsearch-hot.yml)
-[elasticsearch/config/elasticsearch-warm.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/elasticsearch/config/elasticsearch-warm.yml)
+[logstash/config/logstash.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/logstash/config/logstash.yml)  
+[logstash/pipeline/logstash.conf](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/logstash/pipeline/logstash.conf)  
+[filebeat/filebeat.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/filebeat/filebeat.yml)  
+[elasticsearch/config/elasticsearch-hot.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/elasticsearch/config/elasticsearch-hot.yml)  
+[elasticsearch/config/elasticsearch-warm.yml](https://github.com/olegkomel1-del/devops-homeworks/blob/master/Monitor/03/elasticsearch/config/elasticsearch-warm.yml)  
+
+
