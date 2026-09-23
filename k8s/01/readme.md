@@ -9,3 +9,5 @@
 >Вывод:  
 >NAME       STATUS   ROLES    AGE   VERSION  
 >kms-test   Ready    <none>   44m   v1.35.6  
+
+![https://github.com/user-attachments/assets/aa232ffe-4e4b-4548-ac10-7f4e6f6e28cb]
