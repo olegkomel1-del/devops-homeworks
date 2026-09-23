@@ -6,6 +6,6 @@
 >```bash
 >kubectl get nodes
 >```
->Вывод:
->NAME       STATUS   ROLES    AGE   VERSION
->kms-test   Ready    <none>   44m   v1.35.6
+>Вывод:  
+>NAME       STATUS   ROLES    AGE   VERSION  
+>kms-test   Ready    <none>   44m   v1.35.6  
