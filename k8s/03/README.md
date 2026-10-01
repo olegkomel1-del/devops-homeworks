@@ -5,25 +5,25 @@
 >### Deployment.yaml
 >```yaml
 >apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-multitool
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx-multitool
-  template:
-    metadata:
-      labels:
-        app: nginx-multitool
-    spec:
-      containers:
-        - name: nginx
-          image: nginx:latest
-          ports:
-            - containerPort: 80
-        - name: multitool
-          image: wbitt/network-multitool:latest
-          command: ["sleep", "infinity"]
+>kind: Deployment
+>metadata:
+>  name: nginx-multitool
+>spec:
+>  replicas: 1
+>  selector:
+>    matchLabels:
+>      app: nginx-multitool
+>  template:
+>    metadata:
+>      labels:
+>        app: nginx-multitool
+>    spec:
+>      containers:
+>        - name: nginx
+>          image: nginx:latest
+>          ports:
+>            - containerPort: 80
+>        - name: multitool
+>          image: wbitt/network-multitool:latest
+>          command: ["sleep", "infinity"]
 >```
