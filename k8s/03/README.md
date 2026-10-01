@@ -40,3 +40,25 @@
 >### Скриншот выполнения команд для увеличения реплик приложения nginx-multitool до 2х.
 >
 >![Скриншот выполнения команд для увеличения реплик приложения nginx-multitool до 2х](https://github.com/user-attachments/assets/f66c8597-d72b-4287-829a-ca17232ea307)
+
+## 4. Создать Service, который обеспечит доступ до реплик приложений
+
+>## service.yaml
+>```yaml
+>apiVersion: v1
+>kind: Service
+>metadata:
+>  name: nginx-multitool-svc
+>spec:
+>  selector:
+>    app: nginx-multitool
+>  ports:
+>    - name: nginx-port
+>      port: 80
+>      targetPort: 80
+> ```
+
+>### Скриншот выполнения команд для создания service
+>
+>![Скриншот выполнения команд для создания service](https://github.com/user-attachments/assets/84dcca3d-335b-4397-9423-38f101f584b2)
+
