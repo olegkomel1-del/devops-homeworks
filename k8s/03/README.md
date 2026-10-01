@@ -38,4 +38,4 @@
 
 >### Скриншот выполнения команд для увеличения реплик приложения nginx-multitool до 2х.
 >
->![Скриншот выполнения команд для увеличения реплик приложения nginx-multitool до 2х](https://github.com/user-attachments/assets/94f77710-e515-40d6-99b6-f04a01a97dd1)
+>![Скриншот выполнения команд для увеличения реплик приложения nginx-multitool до 2х](https://github.com/user-attachments/assets/f66c8597-d72b-4287-829a-ca17232ea307)
