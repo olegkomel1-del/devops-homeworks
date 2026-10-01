@@ -27,3 +27,5 @@
 >          image: wbitt/network-multitool:latest
 >          command: ["sleep", "infinity"]
 >```
+
+Для того чтобы избежать ошибки конкуренции приложений за 80 порт добавляем для приложения network-multitool команду ["sleep", "infinity"]
