@@ -88,6 +88,64 @@
 >
 >![kubectl exec -it multitool-client -- curl http://nginx-multitool-svc](https://github.com/user-attachments/assets/ae306339-c248-4890-8ddd-eb403a4ff1de)
 
+## Задание 2. Создать Deployment и обеспечить старт основного контейнера при выполнении условий
 
-<img width="706" height="258" alt="image" src="https://github.com/user-attachments/assets/2bce00f7-4b12-4d5a-9c34-6427faad91e8" />
+>### nginx-init.yaml
+>```yaml
+>apiVersion: apps/v1
+>kind: Deployment
+>metadata:
+>  name: nginx-with-init
+>spec:
+>  replicas: 1
+>  selector:
+>    matchLabels:
+>      app: nginx-with-init
+>  template:
+>    metadata:
+>      labels:
+>        app: nginx-with-init
+>    spec:
+>      initContainers:
+>        - name: wait-for-service
+>          image: busybox:latest
+>          command:
+>            - sh
+>            - -c
+>            - |
+>              echo "Waiting for nginx-init-svc..."
+>              until nslookup nginx-init-svc.default.svc.cluster.local; do
+>                echo "Service not found, retrying..."
+>                sleep 2
+>              done
+>              echo "Service is up!"
+>      containers:
+>        - name: nginx
+>          image: nginx:latest
+>          ports:
+>            - containerPort: 80
+>```
 
+>### Состояние пода ДО создания Service
+>
+>![Состояние пода ДО создания Service](https://github.com/user-attachments/assets/2bce00f7-4b12-4d5a-9c34-6427faad91e8)
+
+## Создание сервиса Service
+
+>### nginx-init-svc.yaml
+>```yaml
+>apiVersion: v1
+>kind: Service
+>metadata:
+>  name: nginx-init-svc
+>spec:
+>  selector:
+>    app: nginx-with-init
+>  ports:
+>    - port: 80
+>      targetPort: 80
+>  type: ClusterIP
+>```
+
+
+<img width="691" height="206" alt="image" src="https://github.com/user-attachments/assets/d8c48420-81df-4dec-b5be-70553358c855" />
