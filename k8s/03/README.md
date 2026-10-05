@@ -1,3 +1,4 @@
+
 # Домашнее задание к занятию «Запуск приложений в K8S»
 
 ## 1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool.
@@ -60,5 +61,5 @@
 
 >### Скриншот выполнения команд для создания service
 >
->![Скриншот выполнения команд для создания service](https://github.com/user-attachments/assets/84dcca3d-335b-4397-9423-38f101f584b2)
+>![Скриншот выполнения команд для создания service](https://github.com/user-attachments/assets/36a4b617-4418-4e14-a834-c1f2e8ab2d8d)
 
