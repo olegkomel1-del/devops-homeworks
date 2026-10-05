@@ -44,7 +44,7 @@
 
 ## 4. Создать Service, который обеспечит доступ до реплик приложений
 
->## service.yaml
+>### service.yaml
 >```yaml
 >apiVersion: v1
 >kind: Service
@@ -67,3 +67,23 @@
 >
 >![kubectl get endpoints nginx-multitool-svc](https://github.com/user-attachments/assets/5ac8e826-0747-41b5-9369-d2e4bd93dac1)
 
+## 5. Создать отдельный Pod с приложением multitool и убедиться с помощью curl, что из пода есть доступ до приложений
+
+>### test-pod.yaml
+>```yaml
+>apiVersion: v1
+>kind: Pod
+>metadata:
+>  name: multitool-client
+>spec:
+>  containers:
+>    - name: multitool
+>      image: wbitt/network-multitool:latest
+>      command: ["sleep", "infinity"]
+>```
+
+### Проверка доступа к сервису из пода
+
+>### kubectl exec -it multitool-client -- curl http://nginx-multitool-svc
+>
+>![kubectl exec -it multitool-client -- curl http://nginx-multitool-svc](https://github.com/user-attachments/assets/ae306339-c248-4890-8ddd-eb403a4ff1de)
