@@ -87,3 +87,7 @@
 >### kubectl exec -it multitool-client -- curl http://nginx-multitool-svc
 >
 >![kubectl exec -it multitool-client -- curl http://nginx-multitool-svc](https://github.com/user-attachments/assets/ae306339-c248-4890-8ddd-eb403a4ff1de)
+
+
+<img width="706" height="258" alt="image" src="https://github.com/user-attachments/assets/2bce00f7-4b12-4d5a-9c34-6427faad91e8" />
+
