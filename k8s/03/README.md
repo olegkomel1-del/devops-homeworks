@@ -63,3 +63,7 @@
 >
 >![Скриншот выполнения команд для создания service](https://github.com/user-attachments/assets/36a4b617-4418-4e14-a834-c1f2e8ab2d8d)
 
+>### Скриншот выполнения команды kubectl get endpoints nginx-multitool-svc
+>
+>![kubectl get endpoints nginx-multitool-svc](https://github.com/user-attachments/assets/5ac8e826-0747-41b5-9369-d2e4bd93dac1)
+
