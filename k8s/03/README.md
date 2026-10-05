@@ -126,7 +126,7 @@
 >            - containerPort: 80
 >```
 
->### Состояние пода ДО создания Service
+>### Состояние пода до создания Service
 >
 >![Состояние пода ДО создания Service](https://github.com/user-attachments/assets/2bce00f7-4b12-4d5a-9c34-6427faad91e8)
 
@@ -147,5 +147,6 @@
 >  type: ClusterIP
 >```
 
-
-<img width="691" height="206" alt="image" src="https://github.com/user-attachments/assets/d8c48420-81df-4dec-b5be-70553358c855" />
+>### Состояние после создания сервиса Service
+>
+>![Состояние после создания сервиса Service](https://github.com/user-attachments/assets/d8c48420-81df-4dec-b5be-70553358c855)
