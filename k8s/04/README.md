@@ -60,7 +60,7 @@
 > type: ClusterIP
 >```
 
->### Скриншот создания/применение манифеста Service
+>### Скриншот создание/применение манифеста Service
 >
 >![Service](https://github.com/user-attachments/assets/721e7dac-a0be-43ab-8d41-aacbc369c244)
 
@@ -79,7 +79,7 @@
 >     command: ["sleep", "infinity"]
 >```
 
->### Скриншот создания/применение манифеста Pod + Проверка доступа по доменному имени сервиса
+>### Скриншот создание/применение манифеста Pod + Проверка доступа по доменному имени сервиса
 >
 >![Pod](https://github.com/user-attachments/assets/9c95b34c-3fa7-4103-bc6f-3baf1f354a18)
 
