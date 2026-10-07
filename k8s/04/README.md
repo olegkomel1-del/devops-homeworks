@@ -40,6 +40,7 @@
 <img width="580" height="206" alt="image" src="https://github.com/user-attachments/assets/e995c073-9a5d-4c03-9d2f-13187fcb82c5" />
 
 >### Service.yaml
+>```yaml
 >apiVersion: v1
 >kind: Service
 >metadata:
@@ -55,6 +56,7 @@
 >     port: 9002
 >     targetPort: 8080
 > type: ClusterIP
+>```
 
 <img width="660" height="166" alt="image" src="https://github.com/user-attachments/assets/721e7dac-a0be-43ab-8d41-aacbc369c244" />
 
