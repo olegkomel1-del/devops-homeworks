@@ -35,7 +35,9 @@
 >            - containerPort: 8080
 >```
 
-<img width="580" height="206" alt="image" src="https://github.com/user-attachments/assets/e995c073-9a5d-4c03-9d2f-13187fcb82c5" />
+>### Скриншот создания/применения манифеста Deployment.yaml
+>
+>![Deployment.yaml](https://github.com/user-attachments/assets/e995c073-9a5d-4c03-9d2f-13187fcb82c5)
 
 ---
 
