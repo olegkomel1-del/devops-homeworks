@@ -83,7 +83,7 @@
 >
 >![Pod](https://github.com/user-attachments/assets/9c95b34c-3fa7-4103-bc6f-3baf1f354a18)
 
----
+## Задание 2. Создать Service и обеспечить доступ к приложениям снаружи кластера
 
 >### nginx-nodeport.yaml
 >```yaml
