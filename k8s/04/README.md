@@ -85,5 +85,23 @@
 
 ---
 
+>### nginx-nodeport.yaml
+>```yaml
+>apiVersion: v1
+>kind: Service
+>metadata:
+> name: nginx-nodeport-svc
+>spec:
+> selector:
+>   app: nginx-multitool
+> ports:
+>   - name: nginx-port
+>     port: 80
+>     targetPort: 80
+>     nodePort: 30080
+> type: NodePort
+>```
 
-<img width="1059" height="600" alt="image" src="https://github.com/user-attachments/assets/74d5684c-01fc-44ec-bde6-6907ffe69ece" />
+>### Скриншот создание/применение манифеста Service (NodePort) + Проверка доступа снаружи кластера
+>
+>![Service (NodePort)](https://github.com/user-attachments/assets/74d5684c-01fc-44ec-bde6-6907ffe69ece)
