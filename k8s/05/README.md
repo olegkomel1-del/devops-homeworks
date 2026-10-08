@@ -153,7 +153,13 @@ spec:
 
 ![Demo](https://github.com/user-attachments/assets/d4ed39ea-f0a7-4e6d-bb0e-0476c98966c7)
 
-<img width="1171" height="714" alt="image" src="https://github.com/user-attachments/assets/61f4e18b-1466-4528-8345-01cf099a4b79" />
+---
+
+### Удалить Deployment и PVC. Продемонстрировать, что после этого произошло с PV. Пояснить, почему.
+
+![Удалить Deployment и PVC](https://github.com/user-attachments/assets/61f4e18b-1466-4528-8345-01cf099a4b79)
+
+
 
 <img width="471" height="144" alt="image" src="https://github.com/user-attachments/assets/7ea06f89-4802-4f72-af09-9a568cd621e4" />
 
