@@ -56,3 +56,5 @@ spec:
 
 ### Скриншот - вывод команды чтения файла
 ![вывод](https://github.com/user-attachments/assets/824dce76-b0b2-418a-907c-48e5d6f01ad5)
+
+## Задание 2. PV, PVC
