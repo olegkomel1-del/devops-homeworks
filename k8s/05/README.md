@@ -58,3 +58,52 @@ spec:
 ![вывод](https://github.com/user-attachments/assets/824dce76-b0b2-418a-907c-48e5d6f01ad5)
 
 ## Задание 2. PV, PVC
+
+### Создать Deployment приложения, состоящего из контейнеров busybox и multitool, использующего созданный ранее PVC
+
+### pv-pvc.yaml
+```yaml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /tmp/k8s-local-pv
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - kms-test
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage
+  volumeName: local-pv
+```
+
+<img width="991" height="597" alt="image" src="https://github.com/user-attachments/assets/d4ed39ea-f0a7-4e6d-bb0e-0476c98966c7" />
+
+<img width="1171" height="714" alt="image" src="https://github.com/user-attachments/assets/61f4e18b-1466-4528-8345-01cf099a4b79" />
+
+<img width="471" height="144" alt="image" src="https://github.com/user-attachments/assets/7ea06f89-4802-4f72-af09-9a568cd621e4" />
+
+
