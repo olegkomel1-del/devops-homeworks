@@ -1,6 +1,8 @@
 
 # Домашнее задание к занятию «Хранение в K8s»
 
+## Задание 1. Volume: обмен данными между контейнерами в поде
+
 ### containers-data-exchange.yaml
 ```yaml
 apiVersion: apps/v1
@@ -42,7 +44,13 @@ spec:
           emptyDir: {}
 ```
 
+### Скриншот - создание/применение манифеста Deployment
+![Deployment](https://github.com/user-attachments/assets/8a16164f-049a-4970-9d11-575f5af84539)
+
 ---
 
-### Скриншот создание/применение манифеста Deployment
-![Deployment](https://github.com/user-attachments/assets/8a16164f-049a-4970-9d11-575f5af84539)
+### Скриншот - описание пода с контейнерами (kubectl describe pods data-exchange)
+![kubectl describe pods data-exchange](https://github.com/user-attachments/assets/a57e19c5-c0d3-462c-b21f-506cfe19e301)
+
+---
+
