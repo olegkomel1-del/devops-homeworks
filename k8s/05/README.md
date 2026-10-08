@@ -42,5 +42,7 @@ spec:
           emptyDir: {}
 ```
 
-### containers-data-exchange.yaml
-<img width="752" height="139" alt="image" src="https://github.com/user-attachments/assets/8a16164f-049a-4970-9d11-575f5af84539" />
+---
+
+### Скриншот создание/применение манифеста Deployment
+![Deployment](https://github.com/user-attachments/assets/8a16164f-049a-4970-9d11-575f5af84539)
