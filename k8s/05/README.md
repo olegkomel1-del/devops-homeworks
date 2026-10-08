@@ -168,3 +168,36 @@ spec:
 ![Удалить PV + demo](https://github.com/user-attachments/assets/7ea06f89-4802-4f72-af09-9a568cd621e4)
 
 После удаления PV файл на ноде не пропал, потому что PV это объект K8S описывающий подключение к ресурсом ноды. При удалении PV удаляется только объект, а физические данные на диске ноды не затрагиваются.
+
+## Задание 3. StorageClass
+
+### Создать Deployment приложения, состоящего из контейнеров busybox и multitool, использующего созданный ранее PVC.
+
+### sc-pvc.yaml
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sc-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: microk8s-hostpath
+```
+
+---
+
+### Создать SC и PVC для подключения папки на локальной ноде, которая будет использована в поде.
+
+### Скриншот создания SC
+![SC](https://github.com/user-attachments/assets/5c4b07e1-7d31-4c9e-8d4e-7b3412653c64)
+### Скриншот создания PVC и проверка динамически созданного PV
+![PVC]https://github.com/user-attachments/assets/4a7353f2-d29d-4427-8a20-5f61e63139c5)
+
+---
+### Продемонстрировать, что контейнер multitool может читать данные из файла в смонтированной директории, в который busybox записывает данные каждые 5 секунд
+
+![demo](https://github.com/user-attachments/assets/de072c31-455c-4eb1-8f6f-f191551a25ee)
