@@ -195,7 +195,7 @@ spec:
 ### Скриншот создания SC
 ![SC](https://github.com/user-attachments/assets/5c4b07e1-7d31-4c9e-8d4e-7b3412653c64)
 ### Скриншот создания PVC и проверка динамически созданного PV
-![PVC]https://github.com/user-attachments/assets/4a7353f2-d29d-4427-8a20-5f61e63139c5)
+![PVC](https://github.com/user-attachments/assets/4a7353f2-d29d-4427-8a20-5f61e63139c5)
 
 ---
 ### Продемонстрировать, что контейнер multitool может читать данные из файла в смонтированной директории, в который busybox записывает данные каждые 5 секунд
