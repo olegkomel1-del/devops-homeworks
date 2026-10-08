@@ -157,10 +157,14 @@ spec:
 
 ### Удалить Deployment и PVC. Продемонстрировать, что после этого произошло с PV. Пояснить, почему.
 
-![Удалить Deployment и PVC](https://github.com/user-attachments/assets/61f4e18b-1466-4528-8345-01cf099a4b79)
+![Удалить Deployment и PVC + demo](https://github.com/user-attachments/assets/61f4e18b-1466-4528-8345-01cf099a4b79)
 
+Как видно из приложенного выше скриншота при удалении Deployment и PVC с файлом /tmp/k8s-local-pv/data.txt ничего не произошло. Это объясняется тем что при создании PV в теле спецификации в параметре "persistentVolumeReclaimPolicy" установлено значение "Retain", при такой конфигурации такое состояние файла ожидаемо.
 
+---
 
-<img width="471" height="144" alt="image" src="https://github.com/user-attachments/assets/7ea06f89-4802-4f72-af09-9a568cd621e4" />
+### Продемонстрировать, что файл сохранился на локальном диске ноды. Удалить PV. Продемонстрировать, что произошло с файлом после удаления PV. Пояснить, почему.
 
+![Удалить PV + demo](https://github.com/user-attachments/assets/7ea06f89-4802-4f72-af09-9a568cd621e4)
 
+После удаления PV файл на ноде не пропал, потому что PV это объект K8S описывающий подключение к ресурсом ноды. 
