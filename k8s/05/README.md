@@ -59,7 +59,8 @@ spec:
 
 ## Задание 2. PV, PVC
 
-### Создать Deployment приложения, состоящего из контейнеров busybox и multitool, использующего созданный ранее PVC
+
+### Создать PV и PVC для подключения папки на локальной ноде, которая будет использована в поде
 
 ### pv-pvc.yaml
 ```yaml
@@ -100,7 +101,57 @@ spec:
   volumeName: local-pv
 ```
 
-<img width="991" height="597" alt="image" src="https://github.com/user-attachments/assets/d4ed39ea-f0a7-4e6d-bb0e-0476c98966c7" />
+---
+
+### Создать Deployment приложения, состоящего из контейнеров busybox и multitool, использующего созданный ранее PVC
+
+### deployment-pv.yaml
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-exchange-pv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-exchange-pv
+  template:
+    metadata:
+      labels:
+        app: data-exchange-pv
+    spec:
+      containers:
+        - name: busybox
+          image: busybox:latest
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "$(date) - hello from busybox (PV)" >> /shared/data.txt
+                sleep 5
+              done
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /shared
+        - name: multitool
+          image: wbitt/network-multitool:latest
+          command: ["sleep", "infinity"]
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /shared
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: local-pvc
+```
+
+---
+
+### Продемонстрировать, что контейнер multitool может читать данные из файла в смонтированной директории, в который busybox записывает данные каждые 5 секунд
+
+![Demo](https://github.com/user-attachments/assets/d4ed39ea-f0a7-4e6d-bb0e-0476c98966c7)
 
 <img width="1171" height="714" alt="image" src="https://github.com/user-attachments/assets/61f4e18b-1466-4528-8345-01cf099a4b79" />
 
