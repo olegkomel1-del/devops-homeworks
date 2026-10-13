@@ -133,5 +133,67 @@ spec:
 
 ![curl -k](https://github.com/user-attachments/assets/d8b80b5d-543c-430f-85e0-5315028d9dd9)
 
+## Задание 3: Настройка RBAC
 
+### Проверка CA кластера
+```bash
+sudo ls /var/snap/microk8s/current/certs/
+```
+Там должны быть ca.crt и ca.key.
 
+### Генерация ключа и CSR
+```bash
+# Приватный ключ
+openssl genrsa -out developer.key 2048
+
+# CSR — запрос на сертификат 
+openssl req -new -key developer.key -out developer.csr -subj "/CN=developer"
+
+# Подписать CSR нашим CA 
+sudo openssl x509 -req -in developer.csr \
+  -CA /var/snap/microk8s/current/certs/ca.crt \
+  -CAkey /var/snap/microk8s/current/certs/ca.key \
+  -CAcreateserial -out developer.crt -days 365
+```
+
+---
+
+### Скриншот команд генерации
+
+![Скриншот команд генерации](https://github.com/user-attachments/assets/114dcac8-3e02-4562-8eeb-a8313be81d28)
+
+---
+
+### role-pod-reader.yaml
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+```
+
+### rolebinding-developer.yaml
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-pod-reader
+  namespace: default
+subjects:
+  - kind: User
+    name: developer
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+---
+
+<img width="1461" height="440" alt="image" src="https://github.com/user-attachments/assets/89eb9d1d-595d-44d1-b637-06e74761959d" />
