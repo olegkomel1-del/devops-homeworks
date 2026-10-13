@@ -82,7 +82,7 @@ cat tls.crt | base64 -w0
 cat tls.key | base64 -w0
 ```
 
-## service-tls.yaml
+### service-tls.yaml
 ```yaml
 apiVersion: v1
 kind: Service
