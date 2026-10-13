@@ -64,6 +64,12 @@ spec:
 
 ## Задание 2: Настройка HTTPS с Secrets
 
+### Генерация сертификата
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt -subj "/CN=myapp.example.com"
+```
+
 ### secret-tls.yaml
 ```yaml
 apiVersion: v1
