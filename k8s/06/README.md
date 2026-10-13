@@ -196,4 +196,5 @@ roleRef:
 
 ---
 
-<img width="1461" height="440" alt="image" src="https://github.com/user-attachments/assets/89eb9d1d-595d-44d1-b637-06e74761959d" />
+### Проверка прав
+![Скриншот проверки прав](https://github.com/user-attachments/assets/89eb9d1d-595d-44d1-b637-06e74761959d)
