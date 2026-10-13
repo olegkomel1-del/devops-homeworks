@@ -82,6 +82,20 @@ cat tls.crt | base64 -w0
 cat tls.key | base64 -w0
 ```
 
+## service-tls.yaml
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-cm-svc
+spec:
+  selector:
+    app: nginx-multitool-cm
+  ports:
+    - port: 80
+      targetPort: 80
+```
+
 ### ingress-tls.yaml
 ```yaml
 apiVersion: networking.k8s.io/v1
