@@ -13,6 +13,7 @@ myapp/
     ├── deployment-multitool.yaml
     ├── service-nginx.yaml
     └── service-multitool.yaml
+```
 
 ### Chart.yaml
 ```yaml
