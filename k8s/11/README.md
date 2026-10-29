@@ -3,7 +3,8 @@
 ## 1. Установить приложение, выявить проблему и описать
 
 ### Скриншот проблемы
-![Скриншот проблемы](https://github.com/user-attachments/assets/72fe4d25-5dd3-4e40-a09f-f40b45a4fe39)
+![Скриншот проблемы](https://github.com/user-attachments/assets/fbdeb0f8-d2e2-4af1-b52a-52178cd3ede5)
+
 
 >Выявлено две проблемы:
 >
