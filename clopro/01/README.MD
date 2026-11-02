@@ -149,3 +149,6 @@ output "private_vm_internal_ip" {
 ### Результат выполнения terraform apply
 
 ![apply](https://github.com/olegkomel1-del/devops-homeworks/blob/master/clopro/01/image/23%20apply.PNG)
+
+### Подключение и проверка доступа в интернет с публичной ВМ
+
