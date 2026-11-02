@@ -153,3 +153,5 @@ output "private_vm_internal_ip" {
 ### Подключение и проверка доступа в интернет с публичной ВМ
 
 ![Public](https://github.com/olegkomel1-del/devops-homeworks/blob/master/clopro/01/image/22%20private%20Vm.PNG)
+
+### Подключение и проверка доступа в интернет с приватной ВМ (через NAT)
