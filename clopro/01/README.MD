@@ -21,7 +21,7 @@ provider "yandex" {
 }
 
 variable "folder_id" { type = string }
-variable "ssh_key_path" { type = string } # Путь к публичному SSH-ключу, например ~/.ssh/id_ed25519.pub
+variable "ssh_key_path" { type = string } 
 
 # 1. Создаём сеть VPC
 resource "yandex_vpc_network" "my-vpc" {
