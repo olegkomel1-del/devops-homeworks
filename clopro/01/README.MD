@@ -145,3 +145,5 @@ output "private_vm_internal_ip" {
   value = yandex_compute_instance.private-vm.network_interface.0.ip_address
 }
 ```
+
+### Результат выполнения terraform apply
