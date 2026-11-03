@@ -144,3 +144,7 @@ resource "yandex_lb_network_load_balancer" "nlb" {
 
 ![demo2](https://github.com/user-attachments/assets/ea2babba-afff-4cfa-9214-275fa2a4234f)
 
+### 4. Проверка отказоустойчивости
+Для проверки работы балансировщика была принудительно остановлена одна из виртуалок в группе. При обновлении страницы сайт продолжил работать, так как балансировщик перенаправил трафик на оставшиеся две живые ВМ.
+
+![demo3](https://github.com/user-attachments/assets/397cc502-2928-4e8c-8487-9adc1b6f1e83)
